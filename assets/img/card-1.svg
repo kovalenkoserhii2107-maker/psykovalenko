@@ -1,13 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" width="900" height="620" role="img" aria-label="">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#EBDFD2"/><stop offset="1" stop-color="#CFC0AF"/>
-    </linearGradient>
-    <filter id="s"><feGaussianBlur stdDeviation="64"/></filter>
-  </defs>
-  <rect width="900" height="620" fill="url(#g)"/>
-  <g filter="url(#s)" opacity=".6">
-    <circle cx="630" cy="248" r="300" fill="#CFE8DC"/>
-    <circle cx="180" cy="496" r="225" fill="#EBDFD2"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" width="900" height="620" role="img">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F7EEE3"/><stop offset="1" stop-color="#E9DAC7"/>
+  </linearGradient>
+  <filter id="blur"><feGaussianBlur stdDeviation="64"/></filter>
+  
+</defs>
+<rect width="900" height="620" fill="url(#bg)"/>
+<g filter="url(#blur)" opacity=".5"><circle cx="700" cy="180" r="200" fill="#CFE8DC"/></g>
+<g stroke="#2E2338" stroke-opacity=".6" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="450" cy="215" r="58"/>
+  <path d="M355 500v-90c0-52 43-95 95-95s95 43 95 95v90"/>
+  <path d="M300 500V400a55 55 0 0 1 55-55M600 500V400a55 55 0 0 0-55-55"/>
+</g>
+<path d="M0 500h900" stroke="#2E2338" stroke-opacity=".25" stroke-width="6"/>
 </svg>
