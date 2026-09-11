@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { requireRole } from '@/lib/auth-guard';
 import { summarizeTestResult } from '@/lib/ai';
 import { db } from '@/lib/db';
+import { createClientFolder } from '@/lib/google';
 import { generatePassword } from '@/lib/password';
 
 const schema = z.object({
@@ -19,7 +20,7 @@ const schema = z.object({
 
 export type CreateClientState = {
   error?: string;
-  created?: { name: string; email: string; password: string };
+  created?: { name: string; email: string; password: string; driveNote?: string };
   values?: { name: string; email: string; phone: string; diagnosis: string; notes: string };
 };
 
@@ -27,7 +28,7 @@ export async function createClient(
   _prev: CreateClientState,
   formData: FormData,
 ): Promise<CreateClientState> {
-  await requireRole('ADMIN');
+  const admin = await requireRole('ADMIN');
 
   const raw = {
     name: String(formData.get('name') ?? ''),
@@ -52,7 +53,7 @@ export async function createClient(
   // підглянути його потім неможливо — лише видати новий.
   const password = generatePassword();
 
-  await db.user.create({
+  const created = await db.user.create({
     data: {
       name,
       email,
@@ -66,10 +67,27 @@ export async function createClient(
         },
       },
     },
+    select: { id: true },
   });
 
+  // Тека на Google Drive — приємне доповнення, а не умова створення
+  // клієнта: якщо Google не підключено, доступ усе одно має з'явитися.
+  let driveNote: string | undefined;
+  try {
+    const folderId = await createClientFolder(admin.id, name);
+    await db.clientProfile.update({
+      where: { userId: created.id },
+      data: { driveFolderId: folderId },
+    });
+  } catch (error) {
+    driveNote =
+      error instanceof Error && error.name === 'GoogleNotConnected'
+        ? 'Теку на Google Drive не створено: увійдіть у CRM через Google'
+        : 'Теку на Google Drive не створено — спробуйте пізніше';
+  }
+
   revalidatePath('/admin/clients');
-  return { created: { name, email, password } };
+  return { created: { name, email, password, driveNote } };
 }
 
 // ---------------------------------------------------------------- AI-резюме
