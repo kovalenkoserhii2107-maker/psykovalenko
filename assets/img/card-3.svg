@@ -1,13 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="900" height="600" role="img" aria-label="placeholder">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" width="900" height="620" role="img" aria-label="">
   <defs>
     <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#DDE7EA"/><stop offset="1" stop-color="#B5C7CC"/>
+      <stop offset="0" stop-color="#EFE4D8"/><stop offset="1" stop-color="#D3BFAE"/>
     </linearGradient>
     <filter id="s"><feGaussianBlur stdDeviation="64"/></filter>
   </defs>
-  <rect width="900" height="600" fill="url(#g)"/>
+  <rect width="900" height="620" fill="url(#g)"/>
   <g filter="url(#s)" opacity=".6">
-    <circle cx="630" cy="240" r="300" fill="#8FB59C"/>
-    <circle cx="180" cy="480" r="225" fill="#DDE7EA"/>
+    <circle cx="630" cy="248" r="300" fill="#B9D8C8"/>
+    <circle cx="180" cy="496" r="225" fill="#EFE4D8"/>
   </g>
 </svg>

@@ -1,16 +1,31 @@
-/* Psykovalenko — интерактив страницы */
+/* Лендинг Тетяни Коваленко — інтерактив сторінки */
 (function () {
   'use strict';
 
-  /* ---- шапка: фон при скролле ---- */
-  var header = document.getElementById('header');
-  var onScroll = function () {
-    header.classList.toggle('is-stuck', window.scrollY > 40);
-  };
-  onScroll();
-  window.addEventListener('scroll', onScroll, { passive: true });
+  /* ---- адреса особистого кабінету (PWA) ----
+     Коли кабінет з'явиться, впишіть сюди його адресу —
+     усі кнопки «Кабінет» на сторінці підхоплять її автоматично. */
+  var CABINET_URL = '';
 
-  /* ---- мобильное меню ---- */
+  if (CABINET_URL) {
+    document.querySelectorAll('[data-cabinet]').forEach(function (a) {
+      a.href = CABINET_URL;
+      a.target = '_blank';
+      a.rel = 'noopener';
+    });
+  }
+
+  /* ---- шапка ховається при скролі вниз ---- */
+  var header = document.getElementById('header');
+  var lastY = 0;
+
+  window.addEventListener('scroll', function () {
+    var y = window.scrollY;
+    header.classList.toggle('is-hidden', y > 240 && y > lastY);
+    lastY = y;
+  }, { passive: true });
+
+  /* ---- мобільне меню ---- */
   var burger = document.getElementById('burger');
   var nav = document.getElementById('nav');
 
@@ -28,65 +43,45 @@
     document.body.style.overflow = open ? 'hidden' : '';
   });
 
-  nav.addEventListener('click', function (e) {
-    if (e.target.tagName === 'A') closeNav();
-  });
+  nav.addEventListener('click', function (e) { if (e.target.tagName === 'A') closeNav(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeNav(); });
 
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') closeNav();
-  });
-
-  /* ---- аккордеон FAQ ---- */
-  var accordion = document.getElementById('accordion');
-  if (accordion) {
+  /* ---- акордеони (про мене + питання) ---- */
+  document.querySelectorAll('.accordion').forEach(function (accordion) {
     accordion.addEventListener('click', function (e) {
       var btn = e.target.closest('.accordion__btn');
       if (!btn) return;
 
       var item = btn.parentElement;
       var panel = item.querySelector('.accordion__panel');
-      var isOpen = item.classList.contains('is-open');
+      var wasOpen = item.classList.contains('is-open');
 
       accordion.querySelectorAll('.accordion__item').forEach(function (other) {
         other.classList.remove('is-open');
         other.querySelector('.accordion__panel').style.maxHeight = null;
       });
 
-      if (!isOpen) {
+      if (!wasOpen) {
         item.classList.add('is-open');
         panel.style.maxHeight = panel.scrollHeight + 'px';
       }
     });
-  }
+  });
 
-  /* ---- появление блоков при скролле ---- */
+  /* ---- поява блоків при скролі ---- */
   var reveals = document.querySelectorAll('.reveal');
 
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry, i) {
         if (!entry.isIntersecting) return;
-        setTimeout(function () {
-          entry.target.classList.add('is-visible');
-        }, i * 90);
+        setTimeout(function () { entry.target.classList.add('is-visible'); }, i * 80);
         io.unobserve(entry.target);
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -60px' });
+    }, { threshold: 0.1, rootMargin: '0px 0px -60px' });
 
     reveals.forEach(function (el) { io.observe(el); });
   } else {
     reveals.forEach(function (el) { el.classList.add('is-visible'); });
-  }
-
-  /* ---- форма: заглушка отправки ---- */
-  var form = document.getElementById('form');
-  if (form) {
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var btn = form.querySelector('button[type="submit"]');
-      // TODO: подключить реальную отправку (почта, Telegram-бот, CRM)
-      btn.textContent = 'Спасибо! Я свяжусь с вами';
-      btn.disabled = true;
-    });
   }
 })();
