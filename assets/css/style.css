@@ -209,6 +209,10 @@ p  { margin: 0 0 1.05em; }
 
 .nav { display: flex; align-items: center; gap: 26px; }
 .nav__cta { display: none; }
+/* пункт «Кабінет» показуємо лише у відкритому мобільному меню:
+   у шапці на вузьких екранах для нього немає місця */
+.nav__cabinet { display: none; }
+
 .nav a {
   font-size: .92rem;
   color: var(--muted);
@@ -615,6 +619,15 @@ p  { margin: 0 0 1.05em; }
   .nav.is-open a { font-family: var(--display); font-size: 1.7rem; color: var(--plum); padding: 12px 40px; }
   .nav.is-open .nav__cta { display: block; margin-top: 10px; color: var(--clay-ink, var(--plum)); font-style: italic; }
   .nav.is-open a::after { display: none; }
+  /* Поки меню відкрите, знімаємо backdrop-filter із шапки: елемент із ним
+     стає містким блоком для position: fixed усередині, і накладка меню
+     стискалася до розмірів шапки замість усього екрана. */
+  .header.nav-open .header__inner {
+    backdrop-filter: none;
+    background: transparent;
+    box-shadow: none;
+  }
+  .nav.is-open .nav__cabinet { display: block; }
   .header__label { display: none; }
 
   .stats__grid { grid-template-columns: repeat(2, 1fr); }

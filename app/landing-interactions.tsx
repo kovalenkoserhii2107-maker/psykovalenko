@@ -26,12 +26,14 @@ export function LandingInteractions() {
     const closeNav = () => {
       nav.classList.remove('is-open');
       burger.classList.remove('is-open');
+      header.classList.remove('nav-open');
       burger.setAttribute('aria-expanded', 'false');
       document.body.style.overflow = '';
     };
     const toggleNav = () => {
       const open = nav.classList.toggle('is-open');
       burger.classList.toggle('is-open', open);
+      header.classList.toggle('nav-open', open);
       burger.setAttribute('aria-expanded', String(open));
       document.body.style.overflow = open ? 'hidden' : '';
     };

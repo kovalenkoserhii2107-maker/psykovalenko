@@ -30,6 +30,7 @@ export default function LandingPage() {
             <a href="#social">Соцмережі</a>
             <a href="#faq">Питання</a>
             <a href="#contact" className="nav__cta">Записатись</a>
+            <Link href="/login" className="nav__cabinet">Особистий кабінет</Link>
           </nav>
 
           <a href="#hero" className="logo"><span className="logo__mark"></span>Тетяна Коваленко</a>
