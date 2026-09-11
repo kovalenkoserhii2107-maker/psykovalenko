@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
+import { isGoogleConfigured } from '@/lib/google';
+
+import { GoogleButton } from './google-button';
 import { LoginForm } from './login-form';
 
 export const metadata: Metadata = { title: 'Вхід' };
@@ -23,6 +26,20 @@ export default function LoginPage() {
           </p>
 
           <LoginForm />
+
+          {isGoogleConfigured() ? (
+            <>
+              <div className="my-6 flex items-center gap-3 text-xs text-muted">
+                <span className="h-px flex-1 bg-[rgba(46,35,56,.14)]" />
+                для психологині
+                <span className="h-px flex-1 bg-[rgba(46,35,56,.14)]" />
+              </div>
+              <GoogleButton />
+              <p className="mt-3 text-center text-xs text-muted">
+                Підключає календар і теку клієнтів на Google Drive
+              </p>
+            </>
+          ) : null}
         </div>
 
         <p className="mt-6 text-center text-xs text-muted">

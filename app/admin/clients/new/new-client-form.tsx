@@ -40,6 +40,12 @@ export function NewClientForm() {
           </div>
         </dl>
 
+        {state.created.driveNote ? (
+          <p className="rounded-2xl bg-cream-warm px-4 py-3 text-sm text-muted">
+            {state.created.driveNote}
+          </p>
+        ) : null}
+
         <div className="flex gap-4">
           <Link
             href="/admin/clients"

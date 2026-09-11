@@ -3,44 +3,69 @@
 Усе, що нижче, виконується з вашої машини: потрібен обліковий запис Fly
 і встановлений `flyctl` (`curl -L https://fly.io/install.sh | sh`).
 
-## 1. Створити застосунок
+## 0. Важливо перед початком
 
-```bash
-fly auth login
-fly launch --no-deploy          # ім'я застосунку і регіон уже є у fly.toml
+Команди виконуються **у теці проєкту**, а не в домашній: без `fly.toml`
+поруч `flyctl` не знає, який застосунок має на увазі.
+
+```
+git clone https://github.com/kovalenkoserhii2107-maker/psykovalenko.git
+cd psykovalenko
 ```
 
-Якщо оберете інше ім'я — виправте `app` і `NEXT_PUBLIC_SITE_URL` у `fly.toml`.
+І не додавайте до команд коментарі через `#`: zsh у macOS за замовчуванням
+не вважає це коментарем і передає решту рядка як аргумент.
+
+## 1. Створити застосунок
+
+```
+fly auth login
+fly launch --no-deploy --no-db --copy-config
+```
+
+`--copy-config` бере наявний `fly.toml`, `--no-db` не дає майстрові
+створити базу самому — її створимо наступним кроком.
+
+Якщо оберете інше ім'я застосунку, виправте `app` і `NEXT_PUBLIC_SITE_URL`
+у `fly.toml`.
 
 ## 2. База даних
 
-```bash
-fly postgres create --name psykovalenko-db --region waw
-fly postgres attach psykovalenko-db --app psykovalenko
+Fly більше не підтримує стару некеровану Postgres — беремо керовану:
+
+```
+fly mpg create
+fly mpg attach --app psykovalenko
 ```
 
-`attach` сам пропише секрет `DATABASE_URL`. Міграції накочуються автоматично
-перед кожним деплоєм — це `release_command` у `fly.toml`.
+`attach` сам пропише секрет `DATABASE_URL`. Міграції накочуються
+автоматично перед кожним деплоєм — це `release_command` у `fly.toml`.
 
 ## 3. Диск під вкладення
 
-```bash
-fly volumes create psy_data --region waw --size 1
+```
+fly volumes create psy_data --size 1
 ```
 
-Без диска файли домашніх завдань зникнуть при першому ж перезапуску машини.
+Регіон береться з `fly.toml`. Без диска файли домашніх завдань зникнуть
+при першому ж перезапуску машини.
 
 ## 4. Секрети
 
-```bash
-fly secrets set \
-  AUTH_SECRET="$(openssl rand -base64 32)" \
-  AUTH_URL="https://psykovalenko.fly.dev" \
-  ANTHROPIC_API_KEY="..."
+```
+fly secrets set AUTH_SECRET="$(openssl rand -base64 32)"
+fly secrets set AUTH_URL="https://psykovalenko.fly.dev"
 ```
 
 `AUTH_URL` має точно збігатися з адресою сайту, інакше вхід кидатиме
 на неправильний домен.
+
+За потреби — ключі інтеграцій:
+
+```
+fly secrets set ANTHROPIC_API_KEY="..."
+fly secrets set AUTH_GOOGLE_ID="..." AUTH_GOOGLE_SECRET="..."
+```
 
 ## 5. Деплой
 
@@ -53,22 +78,21 @@ fly open
 
 Пароль задається один раз, із вашої машини через тунель до бази:
 
-```bash
-fly proxy 15432:5432 -a psykovalenko-db     # лишіть відкритим в окремому вікні
+Лишіть відкритим в окремому вікні:
 
-# у другому вікні, у теці проєкту:
-DATABASE_URL="postgresql://postgres:<пароль>@localhost:15432/psykovalenko" \
-ADMIN_EMAIL="kovalenkotanya2205@gmail.com" \
-ADMIN_PASSWORD="<довгий пароль>" \
-npm run db:seed
+```
+fly mpg proxy
 ```
 
-Пароль до бази показує `fly postgres attach` — або `fly secrets list` укаже,
-що `DATABASE_URL` уже виставлено.
+У другому вікні, у теці проєкту (адресу бази показує `fly mpg status`):
+
+```
+DATABASE_URL="<адреса з fly mpg, але з localhost і портом проксі>" ADMIN_EMAIL="kovalenkotanya2205@gmail.com" ADMIN_PASSWORD="<довгий пароль>" npm run db:seed
+```
 
 ## 7. Свій домен
 
-```bash
+```
 fly certs add psykovalenko.com
 ```
 
