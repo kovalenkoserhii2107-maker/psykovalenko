@@ -1,0 +1,191 @@
+// Схема бази даних кабінету психолога.
+// Prisma 7 + PostgreSQL (Fly Postgres у продакшені).
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------- користувачі
+
+enum Role {
+  ADMIN
+  CLIENT
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  passwordHash  String? // null у тих, хто входить лише через Google
+  image         String?
+  role          Role      @default(CLIENT)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  profile  ClientProfile?
+  sessions Session[]
+  homework Homework[]
+  results  TestResult[]
+
+  // NextAuth
+  accounts     Account[]
+  authSessions AuthSession[]
+
+  @@index([role])
+}
+
+model ClientProfile {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  phone     String?
+  birthDate DateTime?
+  diagnosis String?
+  notes     String? // приватні нотатки психологині, клієнт їх не бачить
+
+  // тека клієнта в Google Drive психологині
+  driveFolderId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ------------------------------------------------------------------- сесії
+
+enum SessionStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+model Session {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  datetime        DateTime
+  durationMinutes Int           @default(50)
+  status          SessionStatus @default(SCHEDULED)
+  notes           String? // нотатки психологині після зустрічі
+
+  // подія в Google Calendar психологині
+  googleEventId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, datetime])
+  @@index([datetime])
+}
+
+// ---------------------------------------------------------------- домашні завдання
+
+enum HomeworkStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+model Homework {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title       String
+  description String
+  status      HomeworkStatus @default(PENDING)
+
+  clientAnswer String?
+  answeredAt   DateTime?
+  dueDate      DateTime?
+
+  attachments Attachment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, status])
+}
+
+model Attachment {
+  id         String   @id @default(cuid())
+  homeworkId String
+  homework   Homework @relation(fields: [homeworkId], references: [id], onDelete: Cascade)
+
+  fileName String
+  mimeType String
+  size     Int
+  url      String // локальне сховище або S3/Drive
+  driveId  String?
+
+  createdAt DateTime @default(now())
+
+  @@index([homeworkId])
+}
+
+// ------------------------------------------------------------------- тести
+
+model TestResult {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  testName   String
+  score      Int?
+  rawAnswers Json
+  aiSummary  String? // клінічне резюме від LLM, імена замасковані перед відправкою
+
+  completedAt DateTime @default(now())
+
+  @@index([userId, testName])
+}
+
+// ---------------------------------------------------------------- NextAuth
+
+model Account {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+// Сесії автентифікації. Названо AuthSession, щоб не плутати з Session —
+// зустріччю клієнта з психологинею.
+model AuthSession {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expires      DateTime
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
