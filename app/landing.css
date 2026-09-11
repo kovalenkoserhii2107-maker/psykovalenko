@@ -1,80 +1,10 @@
 /* ==========================================================================
-   Тетяна Коваленко — лендинг психолога
-   Гібрид: композиція Spirito + палітра й типографіка Balancia.
+   Лендинг. Перенесено з окремої статичної сторінки без змін оформлення:
+   власна палітра й типографіка, поза Tailwind. Токени звідси використовує
+   й кабінет — див. app/globals.css.
    ========================================================================== */
 
-:root {
-  /* палітра */
-  --cream:       #F9F0E7;
-  --cream-soft:  #FDF8F2;
-  --cream-warm:  #F3E7DA;
-  --plum:        #2E2338;
-  --plum-soft:   #453655;
-  --mint:        #CFE8DC;
-  --mint-deep:   #A9D4BF;
-  --ink:         #2A2430;
-  --muted:       #6B6472;
-  --line:        rgba(46, 35, 56, .16);
-  --white:       #FFFFFF;
-
-  /* типографіка */
-  --display: "Playfair Display", Georgia, "Times New Roman", serif;
-  --sans:    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-
-  /* ритм */
-  --radius-sm:  14px;
-  --radius:     22px;
-  --radius-lg:  30px;
-  --radius-xl:  40px;
-  --pill:       999px;
-  --section:    clamp(76px, 9.5vw, 140px);
-  --gutter:     clamp(20px, 4vw, 40px);
-  --maxw:       1280px;
-  --edge:       clamp(10px, 1.6vw, 20px);
-
-  --shadow-sm: 0 2px 12px rgba(46, 35, 56, .06);
-  --shadow:    0 24px 60px -34px rgba(46, 35, 56, .34);
-  --shadow-lg: 0 48px 110px -48px rgba(46, 35, 56, .46);
-
-  --ease: cubic-bezier(.22, .61, .36, 1);
-}
-
 /* ---------- база ---------- */
-
-*, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-
-body {
-  margin: 0;
-  background: var(--cream);
-  color: var(--ink);
-  font-family: var(--sans);
-  font-size: 16.5px;
-  line-height: 1.68;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
-
-img { max-width: 100%; display: block; }
-a { color: inherit; text-decoration: none; }
-
-h1, h2, h3, h4 {
-  font-family: var(--display);
-  font-weight: 400;
-  line-height: 1.1;
-  letter-spacing: -.015em;
-  margin: 0 0 .5em;
-  color: var(--plum);
-}
-h1 { font-size: clamp(2.9rem, 6.6vw, 5.2rem); line-height: 1.02; }
-h2 { font-size: clamp(2rem, 4.4vw, 3.5rem); }
-h3 { font-size: clamp(1.2rem, 1.8vw, 1.5rem); }
-em { font-style: italic; }
-p  { margin: 0 0 1.05em; }
-
-.container { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter); }
-.container--narrow { max-width: 960px; }
-.section { padding-block: var(--section); position: relative; }
 
 /* щоб якірні посилання не ховалися під фіксованою шапкою */
 [id] { scroll-margin-top: 116px; }
@@ -659,8 +589,3 @@ p  { margin: 0 0 1.05em; }
   .post__media { aspect-ratio: 4 / 3; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
-  .reveal { opacity: 1; transform: none; }
-}

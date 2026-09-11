@@ -1,0 +1,89 @@
+import Link from 'next/link';
+import type { Metadata } from 'next';
+
+import { Badge, Card, EmptyState } from '@/components/ui';
+import { requireRole } from '@/lib/auth-guard';
+import { db } from '@/lib/db';
+import { formatDateTime } from '@/lib/format';
+
+export const metadata: Metadata = { title: 'Кабінет' };
+
+const statusLabels = {
+  PENDING: 'Не почато',
+  IN_PROGRESS: 'В роботі',
+  COMPLETED: 'Виконано',
+} as const;
+
+export default async function ClientDashboard() {
+  const user = await requireRole('CLIENT');
+
+  const [nextSession, tasks] = await Promise.all([
+    db.session.findFirst({
+      where: { userId: user.id, status: 'SCHEDULED', datetime: { gte: new Date() } },
+      orderBy: { datetime: 'asc' },
+    }),
+    db.homework.findMany({
+      where: { userId: user.id, status: { not: 'COMPLETED' } },
+      orderBy: { createdAt: 'desc' },
+      take: 3,
+    }),
+  ]);
+
+  return (
+    <div className="flex flex-col gap-5">
+      <Card className="p-6">
+        <p className="text-xs tracking-wide text-muted uppercase">Наступна зустріч</p>
+        {nextSession ? (
+          <>
+            <p className="mt-2 font-display text-2xl text-plum">
+              {formatDateTime(nextSession.datetime)}
+            </p>
+            <p className="mt-1 text-sm text-muted">
+              {nextSession.durationMinutes} хвилин
+            </p>
+          </>
+        ) : (
+          <p className="mt-2 text-sm text-muted">
+            Поки не запланована. Напишіть психологині, щоб домовитись про час.
+          </p>
+        )}
+      </Card>
+
+      <section>
+        <div className="mb-3 flex items-center justify-between px-1">
+          <h2 className="font-display text-2xl text-plum">Завдання</h2>
+          <Link
+            href="/client/homework"
+            className="text-sm text-muted underline underline-offset-4"
+          >
+            Усі
+          </Link>
+        </div>
+
+        {tasks.length === 0 ? (
+          <EmptyState>Активних завдань немає. Відпочивайте.</EmptyState>
+        ) : (
+          <ul className="flex flex-col gap-3">
+            {tasks.map((task) => (
+              <li key={task.id}>
+                <Link href={`/client/homework/${task.id}`}>
+                  <Card className="p-5">
+                    <div className="flex items-start justify-between gap-3">
+                      <p className="font-medium text-plum">{task.title}</p>
+                      <Badge tone={task.status === 'IN_PROGRESS' ? 'mint' : 'warm'}>
+                        {statusLabels[task.status]}
+                      </Badge>
+                    </div>
+                    <p className="mt-2 line-clamp-2 text-sm text-muted">
+                      {task.description}
+                    </p>
+                  </Card>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+    </div>
+  );
+}
