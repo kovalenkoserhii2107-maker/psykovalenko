@@ -1,0 +1,16 @@
+node_modules
+.next
+.git
+.env
+.env.*
+uploads
+lib/generated
+
+# стара статична копія лендинга — живе на GitHub Pages, в образі не потрібна
+index.html
+assets
+.nojekyll
+
+docs
+README.md
+CLAUDE.md
