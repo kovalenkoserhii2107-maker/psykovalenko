@@ -6,6 +6,7 @@ import { requireRole } from '@/lib/auth-guard';
 const tabs = [
   { href: '/client', label: 'Головна' },
   { href: '/client/homework', label: 'Завдання' },
+  { href: '/client/tests', label: 'Тести' },
 ];
 
 export default async function ClientLayout({
@@ -26,6 +27,12 @@ export default async function ClientLayout({
       </header>
 
       <main className="flex-1 px-5 py-4">{children}</main>
+
+      <p className="px-5 pb-4 text-center text-xs text-muted">
+        <Link href="/offer" className="underline underline-offset-4">
+          Публічна оферта
+        </Link>
+      </p>
 
       {/* нижня панель — великий палець дістає, як у застосунку */}
       <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-white/60 bg-white/70 px-5 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-xl">
