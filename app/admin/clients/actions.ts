@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
 import { requireRole } from '@/lib/auth-guard';
+import { summarizeTestResult } from '@/lib/ai';
 import { db } from '@/lib/db';
 import { generatePassword } from '@/lib/password';
 
@@ -69,4 +70,52 @@ export async function createClient(
 
   revalidatePath('/admin/clients');
   return { created: { name, email, password } };
+}
+
+// ---------------------------------------------------------------- AI-резюме
+
+export type SummaryState = { error?: string; summary?: string };
+
+export async function buildSummary(
+  _prev: SummaryState,
+  formData: FormData,
+): Promise<SummaryState> {
+  await requireRole('ADMIN');
+
+  const resultId = String(formData.get('resultId') ?? '');
+  const result = await db.testResult.findUnique({
+    where: { id: resultId },
+    include: { user: { select: { name: true, email: true, profile: true } } },
+  });
+  if (!result) return { error: 'Результат не знайдено' };
+
+  const raw = result.rawAnswers as {
+    slug?: string;
+    answers?: Record<string, number>;
+    note?: string;
+  };
+  if (!raw?.slug || !raw.answers) {
+    return { error: 'У результаті немає відповідей — резюме не скласти' };
+  }
+
+  try {
+    const summary = await summarizeTestResult({
+      slug: raw.slug,
+      score: result.score ?? 0,
+      answers: raw.answers,
+      note: raw.note,
+      identity: {
+        name: result.user.name,
+        email: result.user.email,
+        phone: result.user.profile?.phone,
+      },
+    });
+
+    await db.testResult.update({ where: { id: result.id }, data: { aiSummary: summary } });
+    revalidatePath('/admin/clients');
+    return { summary };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Невідома помилка';
+    return { error: `Не вдалося скласти резюме: ${message}` };
+  }
 }
