@@ -22,7 +22,7 @@ calm editorial mood, muted desaturated colors --style raw --stylize 250 --v 7
 
 ---
 
-## 1. `hero.jpg` — главный экран · `--ar 16:10`
+## 1. `hero.jpg` — главный экран · `--ar 16:10` ✅ готово
 
 Левая треть кадра должна остаться пустой: поверх неё ложится заголовок.
 
@@ -42,14 +42,14 @@ two armchairs facing each other at a low table, soft knitted throw, ceramic mug,
 warm afternoon light through a window, quiet intimate room, vertical composition --ar 4:5
 ```
 
-## 3. `good.jpg` — маленькая арка в блоке «Вам може стати легше» · `--ar 3:4`
+## 3. `good.jpg` — маленькая арка в блоке «Вам може стати легше» · `--ar 3:4` ✅ готово (букет)
 
 ```
 close-up of hands cradling a warm ceramic mug, knitted sleeve, soft daylight,
 blurred plant in the background, gentle and hopeful --ar 3:4
 ```
 
-## 4. `stats.jpg` — тёмная подложка под статистику · `--ar 16:9`
+## 4. `stats.jpg` — тёмная подложка под статистику · `--ar 16:9` ✅ готово
 
 Поверх ложится тёмно-сливовый слой и белый текст, поэтому кадр нужен тёмный и спокойный.
 
@@ -107,4 +107,8 @@ dark cream background, quiet melancholic still life, vertical --ar 3:4
 3. Положить в `assets/img/` под именами выше.
 4. Сказать мне — я переключу пути в разметке и подгоню кадрирование.
 
-Пока лежат временные SVG-иллюстрации в той же палитре.
+Осталось: `about.jpg` (портрет), `card-1..3.jpg`, `post-1..3.jpg` —
+под ними пока временные SVG-иллюстрации в той же палитре.
+
+Присланные PNG пережаты в JPEG (~130–200 КБ вместо 1,4–2 МБ): PNG такого
+веса тормозил бы загрузку страницы. Оригиналы остались в истории `main`.
