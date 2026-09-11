@@ -1,13 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 950" width="1600" height="950" role="img" aria-label="">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#4A3A58"/><stop offset="1" stop-color="#2A2033"/>
-    </linearGradient>
-    <filter id="s"><feGaussianBlur stdDeviation="114"/></filter>
-  </defs>
-  <rect width="1600" height="950" fill="url(#g)"/>
-  <g filter="url(#s)" opacity=".6">
-    <circle cx="1120" cy="380" r="533" fill="#6B5478"/>
-    <circle cx="320" cy="760" r="400" fill="#4A3A58"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 950" width="1600" height="950" role="img">
+<defs><radialGradient id="g" cx=".5" cy=".2" r=".9">
+  <stop offset="0" stop-color="#463556"/><stop offset="1" stop-color="#241B2C"/>
+</radialGradient></defs>
+<rect width="1600" height="950" fill="url(#g)"/>
+<g fill="none" stroke="#CFE8DC" stroke-opacity=".16" stroke-width="3">
+  <circle cx="800" cy="180" r="200"/><circle cx="800" cy="180" r="330"/>
+  <circle cx="800" cy="180" r="470"/><circle cx="800" cy="180" r="620"/>
+</g>
+<g fill="#E7C9AE" opacity=".5">
+  <circle cx="270" cy="240" r="5"/><circle cx="1340" cy="180" r="6"/>
+  <circle cx="1120" cy="620" r="4"/><circle cx="430" cy="700" r="5"/>
+</g>
 </svg>
