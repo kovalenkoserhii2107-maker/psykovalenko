@@ -3,8 +3,11 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 
 import { Badge, Card, EmptyState, PageTitle } from '@/components/ui';
+import { isAiConfigured } from '@/lib/ai';
 import { getClient } from '@/lib/clients';
 import { formatDate, formatDateTime, initials } from '@/lib/format';
+
+import { SummaryButton } from './summary-button';
 
 export const metadata: Metadata = { title: 'Картка клієнта' };
 
@@ -25,6 +28,8 @@ export default async function ClientPage({ params }: PageProps<'/admin/clients/[
   const { id } = await params;
   const client = await getClient(id);
   if (!client) notFound();
+
+  const aiReady = isAiConfigured();
 
   return (
     <>
@@ -154,7 +159,9 @@ export default async function ClientPage({ params }: PageProps<'/admin/clients/[
                     </div>
                     {result.aiSummary ? (
                       <p className="mt-2 text-sm text-muted">{result.aiSummary}</p>
-                    ) : null}
+                    ) : (
+                      <SummaryButton resultId={result.id} disabled={!aiReady} />
+                    )}
                   </li>
                 ))}
               </ul>
