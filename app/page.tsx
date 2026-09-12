@@ -57,6 +57,7 @@ export default async function LandingPage() {
             <a href="#about">Про мене</a>
             <a href="#services">Послуги</a>
             <a href="#experience">Досвід клієнтів</a>
+            <Link href="/blog">Блог</Link>
             <a href="#social">Соцмережі</a>
             <a href="#faq">Питання</a>
             <a href="#contact" className="nav__cta">Записатись</a>
@@ -333,12 +334,7 @@ export default async function LandingPage() {
                     </>
                   );
 
-                  // З посиланням на соцмережу картка веде туди, інакше — на сторінку допису
-                  return post.externalUrl ? (
-                    <a key={post.id} href={href} className="post reveal" target="_blank" rel="noopener noreferrer">
-                      {inner}
-                    </a>
-                  ) : (
+                  return (
                     <Link key={post.id} href={href} className="post reveal">
                       {inner}
                     </Link>
@@ -419,6 +415,7 @@ export default async function LandingPage() {
                   <li><a href="#about">Про мене</a></li>
                   <li><a href="#services">Напрямки</a></li>
                   <li><a href="#experience">Досвід клієнтів</a></li>
+                  <li><Link href="/blog">Блог</Link></li>
                   <li><a href="#faq">Питання</a></li>
                 </ul>
               </div>

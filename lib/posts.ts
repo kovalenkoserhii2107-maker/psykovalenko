@@ -72,5 +72,10 @@ export function readingMinutes(body: string) {
 export const coverUrl = (post: Pick<Post, 'id' | 'coverName'>) =>
   post.coverName ? `/api/blog/cover/${post.id}` : null;
 
-export const postHref = (post: Pick<Post, 'slug' | 'externalUrl'>) =>
-  post.externalUrl || `/blog/${post.slug}`;
+/**
+ * Картка завжди веде на сторінку допису, навіть коли той уже вийшов у
+ * соцмережах: спершу людина читає текст у нас, а вже звідти може перейти
+ * за посиланням. Раніше картка відкривала інстаграм одразу, і власна
+ * сторінка допису лишалась недосяжною.
+ */
+export const postHref = (post: Pick<Post, 'slug'>) => `/blog/${post.slug}`;
