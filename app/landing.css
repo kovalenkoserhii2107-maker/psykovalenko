@@ -493,6 +493,11 @@
   .burger { display: block; }
   .header__inner { grid-template-columns: auto 1fr auto; padding-left: 16px; }
   .logo { justify-self: start; }
+  /* Бургер (він же хрестик) тримаємо над накладкою меню. Піднімати z-index
+     самій шапці марно: накладка лежить усередині неї, тож змагаються вони
+     в одному контексті накладання. */
+  .header.nav-open .burger { z-index: 130; }
+
   .nav.is-open {
     display: flex;
     position: fixed; inset: 0;
@@ -534,7 +539,10 @@
   .about__grid, .faq__grid { grid-template-columns: 1fr; }
   .about__card { max-width: 420px; }
   .hero { min-height: 90vh; min-height: 90svh; }
-  .hero::before { background: linear-gradient(170deg, var(--cream) 0%, rgba(249,240,231,.95) 46%, rgba(249,240,231,.7) 100%); }
+  /* Знизу пелену майже прибираємо: текст стоїть угорі, а фото там тільки
+     сіріло. Плюс трохи контрасту — на телефоні знімок читався геть тьмяно. */
+  .hero::before { background: linear-gradient(174deg, var(--cream) 0%, rgba(249,240,231,.93) 34%, rgba(249,240,231,.5) 64%, rgba(249,240,231,.12) 100%); }
+  .hero__media img { filter: contrast(1.08) saturate(1.06); }
 }
 
 @media (max-width: 600px) {

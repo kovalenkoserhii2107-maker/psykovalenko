@@ -39,7 +39,6 @@ export default async function BlogIndex() {
             {posts.map((post) => {
               const cover = coverUrl(post);
               const href = postHref(post);
-              const external = Boolean(post.externalUrl);
               const meta =
                 post.sourceLabel ??
                 `${formatDate(post.publishedAt!)} · ${readingMinutes(post.body)} хв`;
@@ -55,11 +54,7 @@ export default async function BlogIndex() {
                 </>
               );
 
-              return external ? (
-                <a key={post.id} href={href} className="post" target="_blank" rel="noopener noreferrer">
-                  {inner}
-                </a>
-              ) : (
+              return (
                 <Link key={post.id} href={href} className="post">
                   {inner}
                 </Link>
