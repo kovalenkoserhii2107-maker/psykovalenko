@@ -13,7 +13,21 @@ export const metadata: Metadata = {
     title: 'Тетяна Коваленко — психологиня',
     description:
       'Бути не ОК — це ОК. Тривога, вигорання, стосунки, самооцінка. Консультації онлайн та очно.',
-    images: ['/assets/img/hero.jpg'],
+    images: [
+      {
+        url: '/assets/img/og.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Два крісла й столик у теплому денному світлі',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Тетяна Коваленко — психологиня',
+    description:
+      'Бути не ОК — це ОК. Тривога, вигорання, стосунки, самооцінка. Консультації онлайн та очно.',
+    images: ['/assets/img/og.jpg'],
   },
 };
 
