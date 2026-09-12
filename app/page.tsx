@@ -186,21 +186,21 @@ export default function LandingPage() {
 
           <div className="services__grid">
             <article className="svc reveal">
-              <div className="svc__media"><img src="assets/img/card-1.svg" alt="" /></div>
+              <div className="svc__media"><img src="assets/img/card-1.jpg" alt="" /></div>
               <h3>Індивідуальна терапія</h3>
               <p>50 хвилин наодинці зі своїм запитом. Регулярність — зазвичай раз на тиждень.</p>
               <div className="svc__foot"><span className="arrow-btn" aria-hidden="true"></span></div>
             </article>
 
             <article className="svc reveal">
-              <div className="svc__media"><img src="assets/img/card-2.svg" alt="" /></div>
+              <div className="svc__media"><img src="assets/img/card-2.jpg" alt="" /></div>
               <h3>Робота з парою</h3>
               <p>Про конфлікти, близькість і вміння чути одне одного. 80 хвилин разом.</p>
               <div className="svc__foot"><span className="arrow-btn" aria-hidden="true"></span></div>
             </article>
 
             <article className="svc reveal">
-              <div className="svc__media"><img src="assets/img/card-3.svg" alt="" /></div>
+              <div className="svc__media"><img src="assets/img/card-3.jpg" alt="" /></div>
               <h3>Підтримувальні консультації</h3>
               <p>Коли гострої кризи немає, але хочеться стійкості та ясності. Раз на 2–4 тижні.</p>
               <div className="svc__foot"><span className="arrow-btn" aria-hidden="true"></span></div>
