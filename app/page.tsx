@@ -1,6 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
+import { listPublished } from '@/lib/blog-queries';
+import { formatDate } from '@/lib/format';
+import { coverUrl, postHref } from '@/lib/posts';
+
 import './landing.css';
 import { LandingInteractions } from './landing-interactions';
 
@@ -31,7 +35,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function LandingPage() {
+/** Дописи змінюються рідко; публікація одразу скидає кеш через
+    revalidatePath('/') в app/admin/blog/actions.ts. */
+export const revalidate = 300;
+
+export default async function LandingPage() {
+  const posts = await listPublished(3);
+
   return (
     <div className="landing">
       {/* ============ ШАПКА ============ */}
@@ -63,7 +73,7 @@ export default function LandingPage() {
 
       {/* ============ ГЕРОЙ ============ */}
       <section className="hero" id="hero">
-        <div className="hero__media"><img src="assets/img/hero.jpg" alt="" /></div>
+        <div className="hero__media"><img src="/assets/img/hero.jpg" alt="" /></div>
 
         <div className="hero__inner">
           <div className="hero__col reveal">
@@ -82,7 +92,7 @@ export default function LandingPage() {
       {/* ============ ХОРОША НОВИНА ============ */}
       <section className="section good">
         <div className="container container--narrow">
-          <div className="good__photo arch reveal"><img src="assets/img/good.jpg" alt="" /></div>
+          <div className="good__photo arch reveal"><img src="/assets/img/good.jpg" alt="" /></div>
 
           <div className="reveal">
             <p className="good__kicker">А <em>хороша</em> новина?</p>
@@ -113,7 +123,7 @@ export default function LandingPage() {
             <li>Стрес і вигорання</li>
             <li>Травма і ПТСР</li>
             <li>Підтримка під час війни</li>
-            <li>Стосунки і сім'я</li>
+            <li>Стосунки і сім’я</li>
             <li>Дитячо-батьківські стосунки</li>
             <li>Самооцінка</li>
             <li>Втрата і горювання</li>
@@ -132,7 +142,7 @@ export default function LandingPage() {
 
           <div className="about__grid">
             <div className="about__card reveal">
-              <div className="about__photo"><img src="assets/img/about.jpg" alt="Тетяна Коваленко" /></div>
+              <div className="about__photo"><img src="/assets/img/about.jpg" alt="Тетяна Коваленко" /></div>
               <p className="about__card-title"><em>Магістр психології</em> — Тетяна Коваленко</p>
               <p>Моя мета — не втримати вас у терапії назавжди, а допомогти віднайти опору й іти далі самостійно.</p>
             </div>
@@ -177,7 +187,7 @@ export default function LandingPage() {
 
       {/* ============ СТАТИСТИКА ============ */}
       <section className="section stats">
-        <div className="stats__media"><img src="assets/img/stats.jpg" alt="" /></div>
+        <div className="stats__media"><img src="/assets/img/stats.jpg" alt="" /></div>
         <div className="container">
           <h2 className="reveal">Щоб якісна терапія була доступною кожному</h2>
 
@@ -200,21 +210,21 @@ export default function LandingPage() {
 
           <div className="services__grid">
             <article className="svc reveal">
-              <div className="svc__media"><img src="assets/img/card-1.jpg" alt="" /></div>
+              <div className="svc__media"><img src="/assets/img/card-1.jpg" alt="" /></div>
               <h3>Індивідуальна терапія</h3>
               <p>50 хвилин наодинці зі своїм запитом. Регулярність — зазвичай раз на тиждень.</p>
               <div className="svc__foot"><span className="arrow-btn" aria-hidden="true"></span></div>
             </article>
 
             <article className="svc reveal">
-              <div className="svc__media"><img src="assets/img/card-2.jpg" alt="" /></div>
+              <div className="svc__media"><img src="/assets/img/card-2.jpg" alt="" /></div>
               <h3>Робота з парою</h3>
               <p>Про конфлікти, близькість і вміння чути одне одного. 80 хвилин разом.</p>
               <div className="svc__foot"><span className="arrow-btn" aria-hidden="true"></span></div>
             </article>
 
             <article className="svc reveal">
-              <div className="svc__media"><img src="assets/img/card-3.jpg" alt="" /></div>
+              <div className="svc__media"><img src="/assets/img/card-3.jpg" alt="" /></div>
               <h3>Підтримувальні консультації</h3>
               <p>Коли гострої кризи немає, але хочеться стійкості та ясності. Раз на 2–4 тижні.</p>
               <div className="svc__foot"><span className="arrow-btn" aria-hidden="true"></span></div>
@@ -248,7 +258,7 @@ export default function LandingPage() {
             <article className="exp reveal">
               <span className="exp__num">03</span>
               <h3>Робота</h3>
-              <p>Регулярні сесії та невеликі практики між ними. Поступово з'являються перші зрушення.</p>
+              <p>Регулярні сесії та невеликі практики між ними. Поступово з’являються перші зрушення.</p>
             </article>
             <article className="exp reveal">
               <span className="exp__num">04</span>
@@ -299,23 +309,42 @@ export default function LandingPage() {
             </ul>
           </div>
 
-          <div className="posts__grid">
-            <a href="https://www.instagram.com/reel/DWwXHYwjBWR/" className="post reveal" target="_blank" rel="noopener">
-              <div className="post__media"><img src="assets/img/post-1.svg" alt="" /></div>
-              <p className="post__date">Instagram · Reels</p>
-              <h3>Чому щоденник допомагає впоратися з тривогою</h3>
-            </a>
-            <a href="#" className="post reveal">
-              <div className="post__media"><img src="assets/img/post-2.svg" alt="" /></div>
-              <p className="post__date">5 жовтня 2026</p>
-              <h3>П'ять способів говорити з партнером про важке</h3>
-            </a>
-            <a href="#" className="post reveal">
-              <div className="post__media"><img src="assets/img/post-3.svg" alt="" /></div>
-              <p className="post__date">28 вересня 2026</p>
-              <h3>Втома чи вигорання: як відрізнити</h3>
-            </a>
-          </div>
+          {posts.length ? (
+            <>
+              <div className="posts__grid">
+                {posts.map((post) => {
+                  const cover = coverUrl(post);
+                  const href = postHref(post);
+                  const inner = (
+                    <>
+                      <div className="post__media">
+                        {cover ? <img src={cover} alt={post.coverAlt ?? ''} /> : null}
+                      </div>
+                      <p className="post__date">
+                        {post.sourceLabel ?? formatDate(post.publishedAt!)}
+                      </p>
+                      <h3>{post.title}</h3>
+                    </>
+                  );
+
+                  // З посиланням на соцмережу картка веде туди, інакше — на сторінку допису
+                  return post.externalUrl ? (
+                    <a key={post.id} href={href} className="post reveal" target="_blank" rel="noopener noreferrer">
+                      {inner}
+                    </a>
+                  ) : (
+                    <Link key={post.id} href={href} className="post reveal">
+                      {inner}
+                    </Link>
+                  );
+                })}
+              </div>
+
+              <p className="posts__all reveal">
+                <Link href="/blog">Усі дописи →</Link>
+              </p>
+            </>
+          ) : null}
         </div>
       </section>
 

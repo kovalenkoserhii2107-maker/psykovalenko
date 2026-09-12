@@ -1,0 +1,112 @@
+/* ==========================================================================
+   Блог. Спирається на токени й компоненти лендинга (app/landing.css):
+   .container, .post, .posts__grid, .section-head — звідти.
+   ========================================================================== */
+
+.blog-page {
+  padding: clamp(90px, 11vw, 150px) 0 clamp(60px, 8vw, 110px);
+  background: var(--cream);
+}
+
+.blog-back { margin: 0 0 clamp(26px, 4vw, 44px); }
+.blog-back a {
+  font-size: .9rem;
+  color: var(--muted);
+  transition: color .3s var(--ease);
+}
+.blog-back a:hover { color: var(--plum); }
+
+.blog-empty {
+  text-align: center;
+  color: var(--muted);
+  padding: clamp(40px, 6vw, 80px) 0;
+}
+
+.blog-list { margin-top: clamp(30px, 4vw, 50px); }
+.blog-card__excerpt {
+  margin: 10px auto 0;
+  max-width: 32ch;
+  font-size: .88rem;
+  color: var(--muted);
+}
+
+/* ---------- сторінка допису ---------- */
+
+.blog-article { max-width: 46rem; }
+.blog-article__meta { margin-bottom: 14px; }
+.blog-article h1 {
+  font-size: clamp(2rem, 4.4vw, 3.1rem);
+  line-height: 1.1;
+  margin-bottom: clamp(26px, 3.5vw, 40px);
+}
+
+.blog-article__cover {
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: clamp(28px, 4vw, 44px);
+  aspect-ratio: 3 / 2;
+}
+.blog-article__cover img { width: 100%; height: 100%; object-fit: cover; }
+
+.blog-article__source { margin-top: clamp(30px, 4vw, 44px); }
+.blog-article__source a {
+  color: var(--plum);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 2px;
+}
+
+.blog-article__cta {
+  margin-top: clamp(44px, 6vw, 72px);
+  padding-top: clamp(30px, 4vw, 44px);
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.blog-article__cta .lead { margin: 0; }
+
+/* ---------- тіло допису ----------
+   Ті самі класи використовує прев'ю в редакторі кабінету, тому стилі
+   лежать тут, а не всередині сторінки. */
+
+.prose-post { color: var(--ink); }
+.prose-post > * + * { margin-top: 1.15em; }
+.prose-post p { font-size: 1.02rem; line-height: 1.75; }
+.prose-post h2 {
+  font-size: clamp(1.3rem, 2.2vw, 1.7rem);
+  margin-top: 1.9em;
+  line-height: 1.25;
+}
+/* у базових стилях списки скинуті (list-style: none) — у тілі допису
+   маркери потрібні, інакше пункти читаються як окремі абзаци */
+.prose-post ul, .prose-post ol { padding-left: 1.35em; }
+.prose-post ul { list-style: disc; }
+.prose-post ol { list-style: decimal; }
+.prose-post li { margin-top: .5em; line-height: 1.7; }
+.prose-post li::marker { color: var(--mint-deep); }
+.prose-post strong { font-weight: 600; color: var(--plum); }
+.prose-post a {
+  color: var(--plum);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 1px;
+  transition: border-color .3s var(--ease);
+}
+.prose-post a:hover { border-color: var(--plum); }
+.prose-post blockquote {
+  margin-left: 0;
+  padding: 4px 0 4px 22px;
+  border-left: 2px solid var(--mint-deep);
+}
+.prose-post blockquote p {
+  font-family: var(--display);
+  font-size: 1.18rem;
+  line-height: 1.5;
+  color: var(--plum);
+  margin: 0;
+}
+
+@media (max-width: 600px) {
+  .blog-article__cta { flex-direction: column; align-items: flex-start; }
+}

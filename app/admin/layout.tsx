@@ -7,6 +7,7 @@ const nav = [
   { href: '/admin', label: 'Огляд' },
   { href: '/admin/clients', label: 'Клієнти' },
   { href: '/admin/calendar', label: 'Календар' },
+  { href: '/admin/blog', label: 'Блог' },
 ];
 
 export default async function AdminLayout({
