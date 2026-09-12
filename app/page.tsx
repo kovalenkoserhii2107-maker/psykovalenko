@@ -35,9 +35,15 @@ export const metadata: Metadata = {
   },
 };
 
-/** Дописи змінюються рідко; публікація одразу скидає кеш через
-    revalidatePath('/') в app/admin/blog/actions.ts. */
-export const revalidate = 300;
+/**
+ * Сторінка читає дописи з бази, тож рендериться на запит.
+ *
+ * Не ISR: із `revalidate` Next пререндерить сторінку ще на збірці, а в
+ * образі DATABASE_URL немає — і `fly deploy` падав на «Export encountered
+ * an error on /page: /». Перевіряти цей випадок треба збіркою без файла
+ * .env, бо `next build` підхоплює його сам, і змінна з оболонки тут ні до чого.
+ */
+export const dynamic = 'force-dynamic';
 
 export default async function LandingPage() {
   const posts = await listPublished(3);
