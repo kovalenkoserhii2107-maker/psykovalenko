@@ -47,9 +47,7 @@ export default async function TestsPage() {
                 className="flex items-center justify-between gap-3 rounded-2xl bg-white/60 px-4 py-3 text-sm"
               >
                 <span className="text-plum">{result.testName}</span>
-                <span className="text-muted">
-                  {result.score} · {formatDate(result.completedAt)}
-                </span>
+                <span className="text-muted">{formatDate(result.completedAt)}</span>
               </li>
             ))}
           </ul>
@@ -57,7 +55,8 @@ export default async function TestsPage() {
       </section>
 
       <p className="px-1 text-xs text-muted">
-        Тести не ставлять діагноз. Це привід поговорити на зустрічі.
+        Тести не ставлять діагноз. Розбір результатів — на зустрічі
+        з психологинею.
       </p>
     </div>
   );

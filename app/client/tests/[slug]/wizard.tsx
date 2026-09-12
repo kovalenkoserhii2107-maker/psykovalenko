@@ -109,18 +109,30 @@ export function TestWizard({ test }: { test: TestDefinition }) {
   };
 
   // --- результат ---
-  if (state.score !== undefined) {
+  // Клієнту показуємо коротко, без балів і тлумачень: розбір — робота
+  // психологині на зустрічі, а цифра без контексту лише лякає.
+  if (state.profile || state.score !== undefined) {
+    const top = state.profile
+      ? [...state.profile].sort((a, b) => b.value - a.value)[0]
+      : null;
+
     return (
       <div className="flex flex-col gap-5">
         <div className="rounded-3xl border border-white/70 bg-white/60 p-7 text-center backdrop-blur-xl">
-          <p className="text-xs tracking-wide text-muted uppercase">{test.name}</p>
-          <p className="mt-3 font-display text-6xl text-plum">{state.score}</p>
-          <p className="mt-2 text-lg text-plum">{state.verdict}</p>
-          <p className="mt-4 text-sm text-muted">
-            Результат збережено — психологиня побачить його у вашій картці.
-            Це не діагноз, а привід поговорити на зустрічі.
+          <p className="font-display text-3xl text-plum">Дякую</p>
+          <p className="mt-3 text-sm text-muted">
+            Відповіді збережено — психологиня подивиться їх перед зустріччю.
+          </p>
+          {top ? (
+            <p className="mt-4 text-sm text-plum">
+              Найпомітніший стан у ваших відповідях — <b>{top.name}</b>.
+            </p>
+          ) : null}
+          <p className="mt-4 text-xs text-muted">
+            Розбір — на сесії: без контексту окремі цифри мало що означають.
           </p>
         </div>
+
         <Link
           href="/client/tests"
           className="rounded-full bg-plum py-3.5 text-center text-base font-medium text-white"
