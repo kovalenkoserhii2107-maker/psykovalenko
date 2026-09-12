@@ -560,22 +560,19 @@
   .hero::before { background: linear-gradient(176deg, var(--cream) 0%, rgba(249,240,231,.95) 42%, rgba(249,240,231,.86) 66%, rgba(249,240,231,.3) 84%, rgba(249,240,231,.06) 100%); }
   .hero__media img { filter: contrast(1.08) saturate(1.06); }
 
-  /* Довгий хвіст не влазить в один рядок і розтікається по фото — на
-     телефоні лишаємо саме посилання. */
-  .hero__blog-tail { display: none; }
-  .hero__blog a::after { content: " →"; }
-
   /* Опис лежить найближче до знімка: --muted давав 4,8:1 — норму,
      але без запасу. Трохи темніший відтінок дає 6:1. */
   .hero .lead { color: #574f63; }
 
-  /* Кружечок зі стрілкою припадає просто на крісло. Сам сливовий дає до
-     нього добрий контраст, але на строкатому знімку губиться межа — тож
-     обводимо кружечок кремовим кільцем: воно відділяє форму від будь-якого
-     тла. М'ятний тут не годиться: він одної світлоти з кріслом, 1,7:1. */
-  .hero .btn--ghost::after {
-    box-shadow: 0 0 0 3px rgba(249, 240, 231, .85);
+  /* Друга кнопка припадає просто на крісло. Замість підпірок навколо
+     стрілки даємо їй власну світлу плашку: тоді вона пара до головної —
+     та сама форма, лише світла — і читається на будь-якому тлі сама,
+     без кілець. */
+  .hero .btn--ghost {
+    background: rgba(253, 248, 242, .88);
+    padding-left: 28px;
   }
+  .hero .btn--ghost:hover { background: var(--white); }
 }
 
 @media (max-width: 600px) {
@@ -622,17 +619,3 @@
   transition: border-color .3s var(--ease);
 }
 .posts__all a:hover { border-color: var(--plum); }
-
-/* рядок під кнопками героя: вхід у блог з першого екрана */
-.hero__blog {
-  margin: 22px 0 0;
-  font-size: .92rem;
-  color: var(--muted);
-}
-.hero__blog a {
-  color: var(--plum);
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 2px;
-  transition: border-color .3s var(--ease);
-}
-.hero__blog a:hover { border-color: var(--plum); }

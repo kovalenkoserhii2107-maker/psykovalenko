@@ -93,13 +93,6 @@ export default async function LandingPage() {
               <a href="#contact" className="btn">Записатись на консультацію</a>
               <a href="#experience" className="btn btn--ghost">Як проходить робота</a>
             </div>
-
-            <p className="hero__blog">
-              <Link href="/blog">Читати блог</Link>
-              <span className="hero__blog-tail">
-                {' '}— розбори, вправи й короткі нотатки про психіку
-              </span>
-            </p>
           </div>
         </div>
       </section>
