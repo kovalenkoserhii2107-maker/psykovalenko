@@ -13,8 +13,23 @@ function createClient() {
   return new PrismaClient({ adapter: new PrismaPg({ connectionString }) });
 }
 
-export const db = globalForPrisma.prisma ?? createClient();
-
-if (process.env.NODE_ENV !== 'production') {
-  globalForPrisma.prisma = db;
+function client() {
+  if (!globalForPrisma.prisma) {
+    globalForPrisma.prisma = createClient();
+  }
+  return globalForPrisma.prisma;
 }
+
+/**
+ * Клієнт створюється при першому зверненні, а не при імпорті модуля.
+ *
+ * Інакше збірка падає: next build обходить маршрути, щоб зібрати їхню
+ * конфігурацію, виконує модуль — і на машині складання, де DATABASE_URL
+ * немає й бути не повинно, одразу летить помилка.
+ */
+export const db = new Proxy({} as PrismaClient, {
+  get(_target, property, receiver) {
+    const value = Reflect.get(client(), property, receiver);
+    return typeof value === 'function' ? value.bind(client()) : value;
+  },
+});
