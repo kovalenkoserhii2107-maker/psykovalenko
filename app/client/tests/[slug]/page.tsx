@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 import { requireRole } from '@/lib/auth-guard';
 import { getTest } from '@/lib/tests';
 
+import { saveTestResult } from '../actions';
+
 import { TestWizard } from './wizard';
 
 export default async function TestPage({ params }: PageProps<'/client/tests/[slug]'>) {
@@ -18,7 +20,13 @@ export default async function TestPage({ params }: PageProps<'/client/tests/[slu
         ← До тестів
       </Link>
       <p className="px-1 text-sm text-muted">{test.intro}</p>
-      <TestWizard test={test} />
+      <TestWizard
+        test={test}
+        action={saveTestResult}
+        hidden={{ slug: test.slug }}
+        doneHref="/client/tests"
+        doneLabel="До списку анкет"
+      />
     </div>
   );
 }

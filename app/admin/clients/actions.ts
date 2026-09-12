@@ -103,7 +103,12 @@ export async function buildSummary(
   const resultId = String(formData.get('resultId') ?? '');
   const result = await db.testResult.findUnique({
     where: { id: resultId },
-    include: { user: { select: { name: true, email: true, profile: true } } },
+    include: {
+      user: { select: { name: true, email: true, profile: true } },
+      // Анкету могла заповнити стороння людина за посиланням: тоді імені
+      // в User немає, і маскувати треба те, чим вона назвалась сама.
+      invite: { select: { respondentName: true, respondentEmail: true } },
+    },
   });
   if (!result) return { error: 'Результат не знайдено' };
 
@@ -123,14 +128,15 @@ export async function buildSummary(
       answers: raw.answers,
       note: raw.note,
       identity: {
-        name: result.user.name,
-        email: result.user.email,
-        phone: result.user.profile?.phone,
+        name: result.user?.name ?? result.invite?.respondentName ?? null,
+        email: result.user?.email ?? result.invite?.respondentEmail ?? undefined,
+        phone: result.user?.profile?.phone ?? undefined,
       },
     });
 
     await db.testResult.update({ where: { id: result.id }, data: { aiSummary: summary } });
     revalidatePath('/admin/clients');
+    revalidatePath('/admin/tests');
     return { summary };
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Невідома помилка';

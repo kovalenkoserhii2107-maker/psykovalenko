@@ -33,6 +33,7 @@ model User {
   homework Homework[]
   results  TestResult[]
   posts    Post[]
+  invites  TestInvite[]
 
   // NextAuth
   accounts     Account[]
@@ -135,9 +136,11 @@ model Attachment {
 // ------------------------------------------------------------------- тести
 
 model TestResult {
-  id     String @id @default(cuid())
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id String @id @default(cuid())
+
+  // Порожній у сторонніх людей: анкету можна пройти за посиланням без входу
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   testName   String
   score      Int?
@@ -146,7 +149,51 @@ model TestResult {
 
   completedAt DateTime @default(now())
 
+  invite TestInvite?
+
   @@index([userId, testName])
+}
+
+// ------------------------------------------------------- посилання на анкети
+
+enum InviteStatus {
+  SENT // посилання створено й віддано людині
+  OPENED // сторінку відкрили, але анкету не завершили
+  COMPLETED // відповіді збережено
+}
+
+/// Одне посилання на одну анкету. Працює без входу, тож придатне і своїм
+/// клієнтам, і стороннім людям.
+model TestInvite {
+  id       String @id @default(cuid())
+  token    String @unique // те, що стоїть в адресі /t/<token>
+  testSlug String
+
+  /// Для кого й навіщо — службовий підпис, людина його не бачить
+  label String?
+
+  /// Заповнено, якщо анкету надіслано своєму клієнту
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  /// Стороння людина називає себе сама перед початком
+  respondentName  String?
+  respondentEmail String?
+
+  status      InviteStatus @default(SENT)
+  openedAt    DateTime?
+  completedAt DateTime?
+  /// Після цієї миті посилання не відкривається; null — безстрокове
+  expiresAt   DateTime?
+
+  resultId String?     @unique
+  result   TestResult? @relation(fields: [resultId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([status, createdAt])
+  @@index([userId])
+  @@index([testSlug])
 }
 
 // -------------------------------------------------------------------- блог
