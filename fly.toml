@@ -1,6 +1,6 @@
 # Конфігурація Fly.io. Перед першим запуском замініть app на своє ім'я.
 app = "psykovalenko"
-primary_region = "fra"          # Франкфурт. Список: fly platform regions
+primary_region = "ams"          # Амстердам — там створено застосунок і диск psy_data
 
 [build]
   dockerfile = "Dockerfile"
