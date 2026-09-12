@@ -8,6 +8,14 @@ import { LoginForm } from './login-form';
 
 export const metadata: Metadata = { title: 'Вхід' };
 
+/**
+ * Сторінка читає змінні оточення (чи налаштовано Google), а вони
+ * з'являються лише в рантаймі — на Fly це секрети, яких під час збірки
+ * немає. Без цього рядка Next пререндерив би сторінку на етапі збірки
+ * й «запікав» у неї відсутність кнопки Google назавжди.
+ */
+export const dynamic = 'force-dynamic';
+
 export default function LoginPage() {
   return (
     <main className="flex flex-1 items-center justify-center p-6">
