@@ -18,7 +18,7 @@ export const metadata: Metadata = {
         url: '/assets/img/og.jpg',
         width: 1200,
         height: 630,
-        alt: 'Два крісла й столик у теплому денному світлі',
+        alt: 'Два крісла одне навпроти одного біля високого вікна',
       },
     ],
   },
@@ -255,11 +255,6 @@ export default function LandingPage() {
               <h3>Опора</h3>
               <p>Зустрічі стають рідшими. Навички залишаються з вами — далі ви спираєтесь на них самостійно.</p>
             </article>
-          </div>
-
-          <div className="experience__cta reveal">
-            <p className="lead">Тут з'являться реальні історії клієнтів — з їхнього дозволу та без імен.</p>
-            <a href="#contact" className="btn btn--ghost">Почати свою історію</a>
           </div>
         </div>
       </section>
