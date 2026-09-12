@@ -589,3 +589,17 @@
   transition: border-color .3s var(--ease);
 }
 .posts__all a:hover { border-color: var(--plum); }
+
+/* рядок під кнопками героя: вхід у блог з першого екрана */
+.hero__blog {
+  margin: 22px 0 0;
+  font-size: .92rem;
+  color: var(--muted);
+}
+.hero__blog a {
+  color: var(--plum);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 2px;
+  transition: border-color .3s var(--ease);
+}
+.hero__blog a:hover { border-color: var(--plum); }

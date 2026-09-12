@@ -23,6 +23,7 @@ export type EditorPost = {
   title: string;
   slug: string;
   excerpt: string;
+  category: string;
   body: string;
   coverUrl: string | null;
   coverAlt: string;
@@ -42,7 +43,14 @@ const TOOLS = [
   { label: 'Посилання', link: true },
 ] as const;
 
-export function PostEditor({ post }: { post?: EditorPost }) {
+export function PostEditor({
+  post,
+  categories = [],
+}: {
+  post?: EditorPost;
+  /** Уже вживані рубрики — щоб не вигадувати нову там, де підійде стара */
+  categories?: string[];
+}) {
   const [state, formAction, pending] = useActionState(savePost, initial);
   const bodyRef = useRef<HTMLTextAreaElement>(null);
 
@@ -173,6 +181,24 @@ export function PostEditor({ post }: { post?: EditorPost }) {
           </>
         )}
       </div>
+
+      <label className="flex flex-col gap-2">
+        <span className="text-sm font-medium text-muted">
+          Рубрика <span className="font-normal">— за нею читачі фільтрують стрічку</span>
+        </span>
+        <input
+          name="category"
+          list="post-categories"
+          defaultValue={post?.category ?? ''}
+          className={field}
+          placeholder="Тривога"
+        />
+        <datalist id="post-categories">
+          {categories.map((c) => (
+            <option key={c} value={c} />
+          ))}
+        </datalist>
+      </label>
 
       <label className="flex flex-col gap-2">
         <span className="text-sm font-medium text-muted">

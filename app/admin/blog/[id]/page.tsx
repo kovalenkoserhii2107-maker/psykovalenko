@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import { Badge, Card, PageTitle } from '@/components/ui';
 import { requireRole } from '@/lib/auth-guard';
 import { db } from '@/lib/db';
+import { CATEGORY_SUGGESTIONS } from '@/lib/post-categories';
 import { formatDateTime } from '@/lib/format';
 import { coverUrl } from '@/lib/posts';
 
@@ -20,6 +21,15 @@ export default async function EditPost({ params }: PageProps<'/admin/blog/[id]'>
   const { id } = await params;
   const post = await db.post.findUnique({ where: { id } });
   if (!post) notFound();
+
+  const used = await db.post.findMany({
+    where: { category: { not: null } },
+    distinct: ['category'],
+    select: { category: true },
+  });
+  const categories = [
+    ...new Set([...used.map((u) => u.category!), ...CATEGORY_SUGGESTIONS]),
+  ];
 
   return (
     <>
@@ -40,11 +50,13 @@ export default async function EditPost({ params }: PageProps<'/admin/blog/[id]'>
 
       <Card className="max-w-3xl p-6">
         <PostEditor
+          categories={categories}
           post={{
             id: post.id,
             title: post.title,
             slug: post.slug,
             excerpt: post.excerpt ?? '',
+            category: post.category ?? '',
             body: post.body,
             coverUrl: coverUrl(post),
             coverAlt: post.coverAlt ?? '',

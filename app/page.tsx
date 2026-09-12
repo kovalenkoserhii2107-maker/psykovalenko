@@ -56,8 +56,8 @@ export default async function LandingPage() {
           <nav className="nav" id="nav">
             <a href="#about">Про мене</a>
             <a href="#services">Послуги</a>
-            <a href="#experience">Досвід клієнтів</a>
             <Link href="/blog">Блог</Link>
+            <a href="#experience">Досвід клієнтів</a>
             <a href="#social">Соцмережі</a>
             <a href="#faq">Питання</a>
             <a href="#contact" className="nav__cta">Записатись</a>
@@ -92,6 +92,10 @@ export default async function LandingPage() {
               <a href="#contact" className="btn">Записатись на консультацію</a>
               <a href="#experience" className="btn btn--ghost">Як проходить робота</a>
             </div>
+
+            <p className="hero__blog">
+              <Link href="/blog">Читати блог</Link> — розбори, вправи й короткі нотатки про психіку
+            </p>
           </div>
         </div>
       </section>
@@ -240,6 +244,50 @@ export default async function LandingPage() {
         </div>
       </section>
 
+      {/* ============ ДОПИСИ ============
+           Блог — друга половина сайту, тож стоїть відразу після знайомства,
+           а не в кінці разом із соцмережами.
+           ================================= */}
+      {posts.length ? (
+        <section className="section" id="blog">
+          <div className="container">
+            <div className="section-head section-head--center reveal">
+              <h2>Дописи <em>та</em> нотатки</h2>
+              <p className="caption">Розбори, вправи й короткі нотатки про психіку</p>
+            </div>
+
+              <div className="posts__grid">
+                {posts.map((post) => {
+                  const cover = coverUrl(post);
+                  const href = postHref(post);
+                  const inner = (
+                    <>
+                      <div className="post__media">
+                        {cover ? <img src={cover} alt={post.coverAlt ?? ''} /> : null}
+                      </div>
+                      <p className="post__date">
+                        {post.category ? `${post.category} · ` : ''}
+                        {post.sourceLabel ?? formatDate(post.publishedAt!)}
+                      </p>
+                      <h3>{post.title}</h3>
+                    </>
+                  );
+
+                  return (
+                    <Link key={post.id} href={href} className="post reveal">
+                      {inner}
+                    </Link>
+                  );
+                })}
+              </div>
+
+              <p className="posts__all reveal">
+                <Link href="/blog">Усі дописи →</Link>
+              </p>
+          </div>
+        </section>
+      ) : null}
+
       {/* ============ ДОСВІД КЛІЄНТІВ ============
            Блок під наповнення: історії, кейси, шлях клієнта.
            Тексти нижче — рибка, замінюємо на реальні.
@@ -276,10 +324,11 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* ============ СОЦМЕРЕЖІ + ДОПИСИ ============
-           Акцентний блок. Дописи дублюють те, що виходить у соцмережах.
-           Посилання підставити у href нижче.
-           ============================================= */}
+
+      {/* ============ СОЦМЕРЕЖІ ============
+           Дописи звідси переїхали вище власною секцією: блог — половина
+           сайту, а не додаток до переліку профілів.
+           ==================================== */}
       <section className="section social" id="social">
         <div className="container">
           <div className="social__head reveal">
@@ -316,37 +365,6 @@ export default async function LandingPage() {
             </ul>
           </div>
 
-          {posts.length ? (
-            <>
-              <div className="posts__grid">
-                {posts.map((post) => {
-                  const cover = coverUrl(post);
-                  const href = postHref(post);
-                  const inner = (
-                    <>
-                      <div className="post__media">
-                        {cover ? <img src={cover} alt={post.coverAlt ?? ''} /> : null}
-                      </div>
-                      <p className="post__date">
-                        {post.sourceLabel ?? formatDate(post.publishedAt!)}
-                      </p>
-                      <h3>{post.title}</h3>
-                    </>
-                  );
-
-                  return (
-                    <Link key={post.id} href={href} className="post reveal">
-                      {inner}
-                    </Link>
-                  );
-                })}
-              </div>
-
-              <p className="posts__all reveal">
-                <Link href="/blog">Усі дописи →</Link>
-              </p>
-            </>
-          ) : null}
         </div>
       </section>
 
@@ -414,8 +432,8 @@ export default async function LandingPage() {
                 <ul>
                   <li><a href="#about">Про мене</a></li>
                   <li><a href="#services">Напрямки</a></li>
-                  <li><a href="#experience">Досвід клієнтів</a></li>
                   <li><Link href="/blog">Блог</Link></li>
+                  <li><a href="#experience">Досвід клієнтів</a></li>
                   <li><a href="#faq">Питання</a></li>
                 </ul>
               </div>
