@@ -70,7 +70,16 @@ async function readCover(formData: FormData) {
   const problem = fileError(file);
   if (problem) return { error: problem };
 
-  return { name: await saveFile(file), mime: file.type };
+  try {
+    return { name: await saveFile(file), mime: file.type };
+  } catch (error) {
+    // Запис на диск міг не вдатися через права на томі або брак місця.
+    // Віддаємо це тим самим шляхом, що й помилку перевірки: інакше виняток
+    // виходив назовні й замість форми з'являлась порожня сторінка.
+    console.error('savePost/cover:', error);
+    const message = error instanceof Error ? error.message : 'невідома помилка';
+    return { error: `Не вдалося зберегти обкладинку: ${message}` };
+  }
 }
 
 /** Стару обкладинку прибираємо з диска, інакше том поступово заповнюється. */
@@ -131,30 +140,30 @@ export async function savePost(
   let postId: string;
 
   try {
-  if (existing) {
-    if (cover) await dropCoverFile(existing.coverName);
-    const post = await db.post.update({
-      where: { id: existing.id },
-      data: {
-        ...common,
-        status: publish ? 'PUBLISHED' : existing.status,
-        // Дату ставимо лише при першій публікації: правки не мають
-        // підіймати старий допис угору стрічки.
-        publishedAt: publish && !existing.publishedAt ? new Date() : existing.publishedAt,
-      },
-    });
-    postId = post.id;
-  } else {
-    const post = await db.post.create({
-      data: {
-        ...common,
-        authorId: authorExists ? admin.id : null,
-        status: publish ? 'PUBLISHED' : 'DRAFT',
-        publishedAt: publish ? new Date() : null,
-      },
-    });
-    postId = post.id;
-  }
+    if (existing) {
+      if (cover) await dropCoverFile(existing.coverName);
+      const post = await db.post.update({
+        where: { id: existing.id },
+        data: {
+          ...common,
+          status: publish ? 'PUBLISHED' : existing.status,
+          // Дату ставимо лише при першій публікації: правки не мають
+          // підіймати старий допис угору стрічки.
+          publishedAt: publish && !existing.publishedAt ? new Date() : existing.publishedAt,
+        },
+      });
+      postId = post.id;
+    } else {
+      const post = await db.post.create({
+        data: {
+          ...common,
+          authorId: authorExists ? admin.id : null,
+          status: publish ? 'PUBLISHED' : 'DRAFT',
+          publishedAt: publish ? new Date() : null,
+        },
+      });
+      postId = post.id;
+    }
   } catch (error) {
     // Хай краще буде зрозумілий рядок у формі, ніж порожня сторінка:
     // Тетяна принаймні побачить, що саме не збереглося.
