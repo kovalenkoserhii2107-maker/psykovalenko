@@ -7,6 +7,7 @@ import { isAiConfigured } from '@/lib/ai';
 import { getClient } from '@/lib/clients';
 import { formatDate, formatDateTime, initials } from '@/lib/format';
 
+import { ResetPassword } from './reset-password';
 import { SummaryButton } from './summary-button';
 
 export const metadata: Metadata = { title: 'Картка клієнта' };
@@ -81,6 +82,8 @@ export default async function ClientPage({ params }: PageProps<'/admin/clients/[
               {client.profile?.notes || '—'}
             </p>
           </div>
+
+          <ResetPassword userId={client.id} />
         </Card>
 
         <div className="flex flex-col gap-6">
