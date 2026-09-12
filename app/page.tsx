@@ -118,7 +118,7 @@ export default function LandingPage() {
 
           <div className="about__grid">
             <div className="about__card reveal">
-              <div className="about__photo"><img src="assets/img/about.svg" alt="Тетяна Коваленко" /></div>
+              <div className="about__photo"><img src="assets/img/about.jpg" alt="Тетяна Коваленко" /></div>
               <p className="about__card-title"><em>Магістр психології</em> — Тетяна Коваленко</p>
               <p>Моя мета — не втримати вас у терапії назавжди, а допомогти віднайти опору й іти далі самостійно.</p>
             </div>
