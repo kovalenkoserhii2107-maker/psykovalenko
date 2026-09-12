@@ -194,7 +194,10 @@
   margin: var(--edge) var(--edge) 0;
   border-radius: var(--radius-lg);
   overflow: hidden;
+  /* svh не змінюється, коли браузер ховає адресний рядок; на vh екран
+     перераховувався просто під час скролу і сторінку смикало */
   min-height: min(94vh, 900px);
+  min-height: min(94svh, 900px);
   display: flex;
   align-items: center;
   isolation: isolate;
@@ -510,6 +513,12 @@
     background: transparent;
     box-shadow: none;
   }
+
+  /* Блюр під фіксованою шапкою браузер перераховує на кожному кадрі скролу —
+     на телефоні це найдорожча операція на сторінці. Тло і так майже
+     непрозоре, тож блюр прибираємо, а непрозорість трохи піднімаємо. */
+  .header__inner { backdrop-filter: none; background: rgba(253, 248, 242, .97); }
+  .stat { backdrop-filter: none; background: rgba(255, 255, 255, .14); }
   .nav.is-open .nav__cabinet { display: block; }
   .header__label { display: none; }
 
@@ -524,7 +533,7 @@
 @media (max-width: 780px) {
   .about__grid, .faq__grid { grid-template-columns: 1fr; }
   .about__card { max-width: 420px; }
-  .hero { min-height: 90vh; }
+  .hero { min-height: 90vh; min-height: 90svh; }
   .hero::before { background: linear-gradient(170deg, var(--cream) 0%, rgba(249,240,231,.95) 46%, rgba(249,240,231,.7) 100%); }
 }
 
@@ -542,3 +551,19 @@
   .post__media { aspect-ratio: 4 / 3; }
 }
 
+
+/* ---------- менше руху ---------- */
+
+/* Системне налаштування «зменшити рух»: показуємо все одразу, без появи
+   й без шапки, що їздить. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; }
+  .header.is-hidden { transform: none; }
+
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

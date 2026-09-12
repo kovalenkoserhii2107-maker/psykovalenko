@@ -14,11 +14,21 @@ export function LandingInteractions() {
     if (!header || !burger || !nav) return;
 
     // --- шапка ховається при скролі вниз ---
-    let lastY = 0;
-    const onScroll = () => {
-      const y = window.scrollY;
+    // Читаємо позицію раз на кадр, а не на кожну подію скролу, і не реагуємо
+    // на рухи дрібніші за 8px: без цього шапка смикалася туди-сюди на
+    // інерційному скролі та на «гумці» вгорі сторінки.
+    let lastY = Math.max(window.scrollY, 0);
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const y = Math.max(window.scrollY, 0); // на iOS scrollY буває від'ємним
+      if (Math.abs(y - lastY) < 8) return;
       header.classList.toggle('is-hidden', y > 240 && y > lastY);
       lastY = y;
+    };
+    const onScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(update);
     };
     window.addEventListener('scroll', onScroll, { passive: true });
 
@@ -83,7 +93,7 @@ export function LandingInteractions() {
           entries.forEach((entry, i) => {
             if (!entry.isIntersecting) return;
             timers.push(
-              setTimeout(() => entry.target.classList.add('is-visible'), i * 80),
+              setTimeout(() => entry.target.classList.add('is-visible'), Math.min(i, 4) * 80),
             );
             io?.unobserve(entry.target);
           });
@@ -97,6 +107,7 @@ export function LandingInteractions() {
 
     return () => {
       window.removeEventListener('scroll', onScroll);
+      if (frame) cancelAnimationFrame(frame);
       burger.removeEventListener('click', toggleNav);
       nav.removeEventListener('click', onNavClick);
       document.removeEventListener('keydown', onKeyDown);
