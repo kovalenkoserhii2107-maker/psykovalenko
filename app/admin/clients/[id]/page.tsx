@@ -85,7 +85,7 @@ export default async function ClientPage({ params }: PageProps<'/admin/clients/[
             </p>
           </div>
 
-          <ResetPassword userId={client.id} />
+          <ResetPassword userId={client.id} email={client.email} />
         </Card>
 
         <div className="flex flex-col gap-6">

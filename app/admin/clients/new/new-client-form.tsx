@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useActionState } from 'react';
 
 import { Button } from '@/components/ui';
+import { CopyAccess } from '@/components/copy-access';
 import { createClient, type CreateClientState } from '../actions';
 
 const initialState: CreateClientState = {};
@@ -39,6 +40,8 @@ export function NewClientForm() {
             <dd className="font-mono text-plum select-all">{state.created.password}</dd>
           </div>
         </dl>
+
+        <CopyAccess email={state.created.email} password={state.created.password} />
 
         {state.created.driveNote ? (
           <p className="rounded-2xl bg-cream-warm px-4 py-3 text-sm text-muted">

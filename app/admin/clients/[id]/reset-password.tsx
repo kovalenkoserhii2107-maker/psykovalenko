@@ -2,11 +2,13 @@
 
 import { useActionState } from 'react';
 
+import { CopyAccess } from '@/components/copy-access';
+
 import { resetClientPassword, type ResetPasswordState } from '../actions';
 
 const initial: ResetPasswordState = {};
 
-export function ResetPassword({ userId }: { userId: string }) {
+export function ResetPassword({ userId, email }: { userId: string; email: string }) {
   const [state, formAction, pending] = useActionState(resetClientPassword, initial);
 
   if (state.password) {
@@ -15,8 +17,9 @@ export function ResetPassword({ userId }: { userId: string }) {
         <p className="text-xs text-muted">Новий пароль — показується один раз</p>
         <p className="mt-2 font-mono text-lg text-plum select-all">{state.password}</p>
         <p className="mt-2 text-xs text-muted">
-          Передайте клієнту. Попередній пароль більше не діє.
+          Попередній пароль більше не діє.
         </p>
+        <CopyAccess email={email} password={state.password} />
       </div>
     );
   }
