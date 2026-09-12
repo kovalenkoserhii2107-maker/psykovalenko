@@ -119,8 +119,18 @@ export async function savePost(
     ...(cover ? { coverName: cover.name, coverMime: cover.mime } : {}),
   };
 
+  // Автор — не обов'язкове поле, а зовнішній ключ. Ідентифікатор приходить
+  // із cookie-сесії, і якщо того користувача в базі вже немає (сесія
+  // пережила зміну бази), вставка падала б порушенням ключа — а на екрані
+  // з'являлась біла сторінка «A server error occurred».
+  const authorExists = await db.user.findUnique({
+    where: { id: admin.id },
+    select: { id: true },
+  });
+
   let postId: string;
 
+  try {
   if (existing) {
     if (cover) await dropCoverFile(existing.coverName);
     const post = await db.post.update({
@@ -138,12 +148,19 @@ export async function savePost(
     const post = await db.post.create({
       data: {
         ...common,
-        authorId: admin.id,
+        authorId: authorExists ? admin.id : null,
         status: publish ? 'PUBLISHED' : 'DRAFT',
         publishedAt: publish ? new Date() : null,
       },
     });
     postId = post.id;
+  }
+  } catch (error) {
+    // Хай краще буде зрозумілий рядок у формі, ніж порожня сторінка:
+    // Тетяна принаймні побачить, що саме не збереглося.
+    const message = error instanceof Error ? error.message : 'невідома помилка';
+    console.error('savePost:', error);
+    return { error: `Не вдалося зберегти допис: ${message}`, values: raw };
   }
 
   revalidatePath('/admin/blog');
