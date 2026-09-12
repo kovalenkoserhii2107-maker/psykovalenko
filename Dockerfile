@@ -9,6 +9,18 @@ COPY package.json package-lock.json prisma.config.ts ./
 COPY prisma ./prisma
 RUN npm ci
 
+# ------------------------------------------------------ Prisma CLI для міграцій
+# Окреме дерево: release_command виконується у фінальному образі, а туди
+# не потрапляє ні node_modules збірки, ні devDependencies. Вибирати
+# залежності вручну не можна — @prisma/config тягне effect, і далі за ланцюгом.
+FROM node:22-alpine AS migrator
+WORKDIR /migrator
+COPY package.json /tmp/app-package.json
+RUN PRISMA_VERSION=$(node -p "require('/tmp/app-package.json').devDependencies.prisma") \
+ && npm init -y > /dev/null \
+ && npm i --no-audit --no-fund "prisma@$PRISMA_VERSION" \
+ && rm /tmp/app-package.json
+
 # ------------------------------------------------------------------- збірка
 FROM node:22-alpine AS builder
 WORKDIR /app
@@ -21,6 +33,12 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+# Обов'язково перед складанням: клієнт Prisma генерується в lib/generated,
+# а та тека не їде ні з deps (копіюємо лише node_modules), ні з репозиторію
+# (вона в .gitignore). Без цього рядка збірка падає на
+# «Can't resolve '@/lib/generated/prisma/client'».
+RUN npx prisma generate
 RUN npm run build
 
 # ------------------------------------------------------------------- запуск
@@ -39,12 +57,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
-# міграції накочує release_command у fly.toml — для цього потрібні
-# схема, конфіг і сам CLI
+# для release_command: схема, конфіг і окреме дерево з Prisma CLI
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/prisma.config.ts ./prisma.config.ts
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.bin ./node_modules/.bin
+COPY --from=migrator --chown=nextjs:nodejs /migrator/node_modules /migrator/node_modules
 
 USER nextjs
 EXPOSE 3000
