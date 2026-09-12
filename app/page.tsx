@@ -256,11 +256,6 @@ export default function LandingPage() {
               <p>Зустрічі стають рідшими. Навички залишаються з вами — далі ви спираєтесь на них самостійно.</p>
             </article>
           </div>
-
-          <div className="experience__cta reveal">
-            <p className="lead">Тут з'являться реальні історії клієнтів — з їхнього дозволу та без імен.</p>
-            <a href="#contact" className="btn btn--ghost">Почати свою історію</a>
-          </div>
         </div>
       </section>
 
