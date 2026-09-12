@@ -3,7 +3,9 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 
 import { Badge, Card, EmptyState, PageTitle } from '@/components/ui';
+import { TestProfile } from '@/components/test-profile';
 import { isAiConfigured } from '@/lib/ai';
+import { getTest, interpret } from '@/lib/tests';
 import { getClient } from '@/lib/clients';
 import { formatDate, formatDateTime, initials } from '@/lib/format';
 
@@ -83,7 +85,7 @@ export default async function ClientPage({ params }: PageProps<'/admin/clients/[
             </p>
           </div>
 
-          <ResetPassword userId={client.id} />
+          <ResetPassword userId={client.id} email={client.email} />
         </Card>
 
         <div className="flex flex-col gap-6">
@@ -152,21 +154,51 @@ export default async function ClientPage({ params }: PageProps<'/admin/clients/[
               <EmptyState>Тести ще не проходили.</EmptyState>
             ) : (
               <ul className="divide-y divide-[rgba(46,35,56,.08)]">
-                {client.results.map((result) => (
-                  <li key={result.id} className="py-3">
+                {client.results.map((result) => {
+                  const raw = result.rawAnswers as {
+                    slug?: string;
+                    note?: string;
+                    profile?: {
+                      id: string;
+                      short: string;
+                      name: string;
+                      value: number;
+                      max: number;
+                    }[];
+                  } | null;
+                  const test = raw?.slug ? getTest(raw.slug) : undefined;
+
+                  return (
+                  <li key={result.id} className="py-4">
                     <div className="flex items-center justify-between gap-4">
-                      <p className="text-sm text-plum">{result.testName}</p>
+                      <p className="text-sm font-medium text-plum">{result.testName}</p>
                       <span className="text-sm text-muted">
-                        {result.score ?? '—'} · {formatDate(result.completedAt)}
+                        {result.score !== null && test
+                          ? `${result.score} — ${interpret(test, result.score)} · `
+                          : ''}
+                        {formatDate(result.completedAt)}
                       </span>
                     </div>
+
+                    {raw?.profile && raw.slug ? (
+                      <div className="mt-4">
+                        <TestProfile profile={raw.profile} slug={raw.slug} />
+                      </div>
+                    ) : null}
+
+                    {raw?.note ? (
+                      <p className="mt-3 rounded-2xl bg-cream-warm p-4 text-sm whitespace-pre-line text-plum">
+                        «{raw.note}»
+                      </p>
+                    ) : null}
                     {result.aiSummary ? (
                       <p className="mt-2 text-sm text-muted">{result.aiSummary}</p>
                     ) : (
                       <SummaryButton resultId={result.id} disabled={!aiReady} />
                     )}
                   </li>
-                ))}
+                  );
+                })}
               </ul>
             )}
           </Card>
