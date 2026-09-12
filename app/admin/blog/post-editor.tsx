@@ -10,6 +10,11 @@ import { savePost, type PostState } from './actions';
 
 const initial: PostState = {};
 
+// Та сама межа, що й у lib/storage.ts. Тримаємо числом тут, щоб не тягнути
+// серверний модуль у клієнтський компонент.
+const MAX_COVER_MB = 10;
+const MAX_COVER_BYTES = MAX_COVER_MB * 1024 * 1024;
+
 const field =
   'w-full rounded-2xl border border-[rgba(46,35,56,.16)] bg-white/70 px-4 py-3 text-base text-ink outline-none transition focus:border-plum/40 focus:bg-white';
 
@@ -46,6 +51,7 @@ export function PostEditor({ post }: { post?: EditorPost }) {
   const [slugTouched, setSlugTouched] = useState(Boolean(post));
   const [body, setBody] = useState(post?.body ?? '');
   const [preview, setPreview] = useState(false);
+  const [coverProblem, setCoverProblem] = useState<string | null>(null);
 
   const shownSlug = slugTouched ? slug : slugify(title || 'новий-допис');
 
@@ -195,8 +201,28 @@ export function PostEditor({ post }: { post?: EditorPost }) {
           type="file"
           name="cover"
           accept="image/jpeg,image/png,image/webp,image/heic"
+          onChange={(e) => {
+            // Перевіряємо розмір ще до надсилання. Завелике фото Next
+            // відкидає цілим запитом (413), і тоді замість форми
+            // з'являється порожня сторінка — сказати вже нічим.
+            const file = e.target.files?.[0];
+            if (file && file.size > MAX_COVER_BYTES) {
+              setCoverProblem(
+                `Файл на ${(file.size / 1024 / 1024).toFixed(1)} МБ — це більше за ${MAX_COVER_MB} МБ. Стисніть його або візьміть менше фото.`,
+              );
+              e.target.value = '';
+              return;
+            }
+            setCoverProblem(null);
+          }}
           className="text-sm text-muted file:mr-3 file:rounded-full file:border-0 file:bg-plum file:px-4 file:py-2 file:text-sm file:text-white"
         />
+
+        {coverProblem ? (
+          <p role="alert" className="rounded-2xl bg-[#b3261e]/10 px-4 py-2.5 text-sm text-[#8c1d18]">
+            {coverProblem}
+          </p>
+        ) : null}
         <input
           name="coverAlt"
           defaultValue={post?.coverAlt ?? ''}
