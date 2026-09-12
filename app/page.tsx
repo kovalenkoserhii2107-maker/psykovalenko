@@ -18,7 +18,7 @@ export const metadata: Metadata = {
         url: '/assets/img/og.jpg',
         width: 1200,
         height: 630,
-        alt: 'Два крісла й столик у теплому денному світлі',
+        alt: 'Два крісла одне навпроти одного біля високого вікна',
       },
     ],
   },
