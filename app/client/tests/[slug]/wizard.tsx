@@ -237,14 +237,14 @@ export function TestWizard({
                 <input
                   value={respondent.name}
                   onChange={(e) => setRespondent({ ...respondent, name: e.target.value })}
-                  placeholder="Як до вас звертатись — не обов'язково"
+                  placeholder="Як до вас звертатись — не обов’язково"
                   className={respondentField}
                 />
                 <input
                   type="email"
                   value={respondent.email}
                   onChange={(e) => setRespondent({ ...respondent, email: e.target.value })}
-                  placeholder="Пошта, якщо хочете відповідь — не обов'язково"
+                  placeholder="Пошта, якщо хочете відповідь — не обов’язково"
                   className={respondentField}
                 />
               </div>

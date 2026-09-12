@@ -84,7 +84,7 @@ export default async function InvitePage({ params }: PageProps<'/t/[token]'>) {
 
           {invite.userId ? null : (
             <p className="rounded-2xl bg-cream-warm px-4 py-3 text-xs text-muted">
-              Як до вас звертатись — можна вписати нижче. Не обов'язково:
+              Як до вас звертатись — можна вписати нижче. Не обов’язково:
               без імені анкета теж збережеться.
             </p>
           )}

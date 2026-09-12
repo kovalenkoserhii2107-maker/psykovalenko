@@ -20,16 +20,16 @@ export function InviteForm({
 }) {
   const [state, formAction, pending] = useActionState(createInvite, initial);
   const [copied, setCopied] = useState(false);
-  const [origin, setOrigin] = useState('');
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => {
-    setOrigin(window.location.origin);
-    return () => {
-      if (timer.current) clearTimeout(timer.current);
-    };
+  useEffect(() => () => {
+    if (timer.current) clearTimeout(timer.current);
   }, []);
 
+  // Адресу беремо просто під час рендера: блок із посиланням існує лише
+  // після відповіді сервера, тобто вже в браузері — розбіжності з
+  // серверною розміткою тут виникнути не може.
+  const origin = typeof window === 'undefined' ? '' : window.location.origin;
   const link = state.created ? `${origin}/t/${state.created.token}` : '';
 
   async function copy() {
