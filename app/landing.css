@@ -350,29 +350,6 @@
 
 /* ---------- відгуки ---------- */
 
-.reviews__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
-.review {
-  background: var(--cream-soft);
-  border-radius: var(--radius-lg);
-  padding: 36px 34px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-.review__mark { font-family: var(--display); font-size: 2.6rem; line-height: .6; color: var(--mint-deep); }
-.review p { margin: 0; flex: 1; color: var(--muted); font-size: .97rem; }
-.review__author { display: flex; align-items: center; gap: 13px; padding-top: 18px; border-top: 1px solid var(--line); }
-.review__avatar {
-  width: 42px; height: 42px;
-  border-radius: 50%;
-  background: var(--mint);
-  display: grid; place-content: center;
-  font-family: var(--display);
-  color: var(--plum);
-  flex: none;
-}
-.review__author b { display: block; color: var(--plum); font-weight: 500; font-size: .93rem; }
-.review__author span { font-size: .82rem; color: var(--muted); }
 
 /* ---------- FAQ ---------- */
 
@@ -551,7 +528,7 @@
   .header__label { display: none; }
 
   .stats__grid { grid-template-columns: repeat(2, 1fr); }
-  .services__grid, .reviews__grid, .posts__grid { grid-template-columns: repeat(2, 1fr); }
+  .services__grid, .posts__grid { grid-template-columns: repeat(2, 1fr); }
   .experience__grid { grid-template-columns: repeat(2, 1fr); }
   .social__head { grid-template-columns: 1fr; }
   .footer__grid { grid-template-columns: 1fr 1fr; }
@@ -572,7 +549,7 @@
   .header__inner { grid-template-columns: 1fr auto; padding: 8px 8px 8px 18px; }
   .header .btn { display: none; }
   .logo { font-size: 1.15rem; }
-  .services__grid, .reviews__grid, .posts__grid, .focus__list, .experience__grid { grid-template-columns: 1fr; }
+  .services__grid, .posts__grid, .focus__list, .experience__grid { grid-template-columns: 1fr; }
   .stats__grid { grid-template-columns: 1fr; }
   .stat { min-height: 0; }
   .footer__grid { grid-template-columns: 1fr; }

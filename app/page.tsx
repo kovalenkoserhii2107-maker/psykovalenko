@@ -13,7 +13,21 @@ export const metadata: Metadata = {
     title: 'Тетяна Коваленко — психологиня',
     description:
       'Бути не ОК — це ОК. Тривога, вигорання, стосунки, самооцінка. Консультації онлайн та очно.',
-    images: ['/assets/img/hero.jpg'],
+    images: [
+      {
+        url: '/assets/img/og.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Два крісла й столик у теплому денному світлі',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Тетяна Коваленко — психологиня',
+    description:
+      'Бути не ОК — це ОК. Тривога, вигорання, стосунки, самооцінка. Консультації онлайн та очно.',
+    images: ['/assets/img/og.jpg'],
   },
 };
 
@@ -229,7 +243,7 @@ export default function LandingPage() {
             <article className="exp reveal">
               <span className="exp__num">02</span>
               <h3>Знайомство</h3>
-              <p>Перша зустріч — 50 хвилин. Дивимось, чи комфортно вам зі мною, і формулюємо ціль.</p>
+              <p>Перша зустріч — 50 хвилин. Дивимось, чи комфортно вам зі мною, і формулюємо запит.</p>
             </article>
             <article className="exp reveal">
               <span className="exp__num">03</span>
@@ -239,56 +253,13 @@ export default function LandingPage() {
             <article className="exp reveal">
               <span className="exp__num">04</span>
               <h3>Опора</h3>
-              <p>Зустрічі стають рідшими: лишаються навички, якими ви користуєтесь самостійно.</p>
+              <p>Зустрічі стають рідшими. Навички залишаються з вами — далі ви спираєтесь на них самостійно.</p>
             </article>
           </div>
 
           <div className="experience__cta reveal">
             <p className="lead">Тут з'являться реальні історії клієнтів — з їхнього дозволу та без імен.</p>
             <a href="#contact" className="btn btn--ghost">Почати свою історію</a>
-          </div>
-        </div>
-      </section>
-
-      {/* ============ ВІДГУКИ ============
-           УВАГА: усі три відгуки нижче вигадані й лишені тимчасово, щоб було
-           видно оформлення блока. Перед публікацією сайту замінити на справжні
-           (з дозволу клієнтів) або прибрати секцію разом із пунктом меню.
-           ================================ */}
-      <section className="section" id="reviews">
-        <div className="container">
-          <div className="section-head section-head--center reveal">
-            <h2>Що <em>кажуть</em> клієнти</h2>
-            <p className="caption">Приклад оформлення — тексти-заповнювачі</p>
-          </div>
-
-          <div className="reviews__grid">
-            <article className="review reveal">
-              <div className="review__mark">“</div>
-              <p>Прийшла з безсонням і постійним напруженням. За кілька місяців уперше за роки почала спати спокійно.</p>
-              <div className="review__author">
-                <div className="review__avatar">М</div>
-                <div><b>Марина, 34</b><span>робота з тривогою</span></div>
-              </div>
-            </article>
-
-            <article className="review reveal">
-              <div className="review__mark">“</div>
-              <p>Довго відкладав терапію, думав — впораюся сам. Виявилось, річ не в силі волі. Стало значно легше говорити з близькими.</p>
-              <div className="review__author">
-                <div className="review__avatar">Д</div>
-                <div><b>Дмитро, 41</b><span>вигорання</span></div>
-              </div>
-            </article>
-
-            <article className="review reveal">
-              <div className="review__mark">“</div>
-              <p>Дуже дбайлива спеціалістка. Ні тиску, ні готових порад — але після кожної зустрічі з'являється ясність.</p>
-              <div className="review__author">
-                <div className="review__avatar">О</div>
-                <div><b>Олена, 28</b><span>самооцінка</span></div>
-              </div>
-            </article>
           </div>
         </div>
       </section>
