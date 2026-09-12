@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Клієнт Prisma генерується, а не пишеться: 300 його зауважень ховали
+    // справжні проблеми у своєму коді.
+    "lib/generated/**",
   ]),
 ]);
 

@@ -32,6 +32,7 @@ model User {
   sessions Session[]
   homework Homework[]
   results  TestResult[]
+  posts    Post[]
 
   // NextAuth
   accounts     Account[]
@@ -146,6 +147,50 @@ model TestResult {
   completedAt DateTime @default(now())
 
   @@index([userId, testName])
+}
+
+// -------------------------------------------------------------------- блог
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model Post {
+  id    String @id @default(cuid())
+  slug  String @unique
+  title String
+
+  // Короткий опис для картки й для прев'ю посилання. Якщо порожній,
+  // збирається з початку тексту.
+  excerpt String?
+
+  // Тіло допису в спрощеній розмітці — див. lib/rich-text.tsx.
+  // Зберігаємо як написала авторка; у HTML не перетворюємо й не вставляємо
+  // через dangerouslySetInnerHTML, а збираємо React-вузли.
+  body String
+
+  status      PostStatus @default(DRAFT)
+  publishedAt DateTime?
+
+  // Обкладинка лежить у тому ж сховищі, що й вкладення домашніх завдань
+  // (lib/storage.ts). coverName — ім'я файла на диску, не оригінальне.
+  coverName String?
+  coverMime String?
+  coverAlt  String?
+
+  // Якщо допис уже вийшов у соцмережах, картка веде туди, а не на сторінку
+  // допису; sourceLabel замінює дату в картці («Instagram · Reels»).
+  externalUrl String?
+  sourceLabel String?
+
+  authorId String?
+  author   User?   @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, publishedAt])
 }
 
 // ---------------------------------------------------------------- NextAuth
