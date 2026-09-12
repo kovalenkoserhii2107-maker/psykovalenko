@@ -37,10 +37,23 @@ export function fileError(file: File) {
 
 /** Повертає ім'я файла на диску. Оригінальне ім'я в шлях не потрапляє. */
 export async function saveFile(file: File) {
-  await mkdir(UPLOAD_DIR, { recursive: true });
   const storedName = randomUUID();
   const buffer = Buffer.from(await file.arrayBuffer());
-  await writeFile(path.join(UPLOAD_DIR, storedName), buffer);
+
+  try {
+    await mkdir(UPLOAD_DIR, { recursive: true });
+    await writeFile(path.join(UPLOAD_DIR, storedName), buffer);
+  } catch (error) {
+    // Найчастіша причина — права на томі: він монтується від root, а
+    // застосунок працює під nextjs. Теку готує docker-entrypoint.sh.
+    const code = (error as NodeJS.ErrnoException).code;
+    if (code === 'EACCES' || code === 'EPERM') {
+      throw new Error(`Немає прав на запис у теку вкладень (${UPLOAD_DIR})`);
+    }
+    if (code === 'ENOSPC') throw new Error('На диску скінчилося місце');
+    throw error;
+  }
+
   return storedName;
 }
 

@@ -52,6 +52,9 @@ ENV HOSTNAME=0.0.0.0
 
 RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
 
+# su-exec потрібен, щоб entrypoint скинув права після підготовки тому
+RUN apk add --no-cache su-exec
+
 # standalone тягне лише те, що справді імпортується
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
@@ -62,7 +65,12 @@ COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/prisma.config.ts ./prisma.config.ts
 COPY --from=migrator --chown=nextjs:nodejs /migrator/node_modules /migrator/node_modules
 
-USER nextjs
+# Запускаємось від root, але лише щоб entrypoint підготував теку вкладень
+# на томі; далі він переходить у nextjs і застосунок працює без прав root.
+COPY --chown=nextjs:nodejs docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 EXPOSE 3000
 
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["node", "server.js"]
