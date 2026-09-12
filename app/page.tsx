@@ -67,6 +67,7 @@ export default async function LandingPage() {
           <a href="#hero" className="logo"><span className="logo__mark"></span>Тетяна Коваленко</a>
 
           <div className="header__actions">
+            <Link href="/blog" className="header__blog">Блог</Link>
             <a href="/login" className="btn btn--ghost header__label">Кабінет</a>
             <a href="#contact" className="btn">Записатись</a>
             <button className="burger" id="burger" aria-label="Меню" aria-expanded="false">
@@ -92,10 +93,6 @@ export default async function LandingPage() {
               <a href="#contact" className="btn">Записатись на консультацію</a>
               <a href="#experience" className="btn btn--ghost">Як проходить робота</a>
             </div>
-
-            <p className="hero__blog">
-              <Link href="/blog">Читати блог</Link> — розбори, вправи й короткі нотатки про психіку
-            </p>
           </div>
         </div>
       </section>

@@ -163,6 +163,20 @@
 .nav a:hover::after { transform: scaleX(1); transform-origin: left; }
 
 .header__actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+
+/* Блог має бути під рукою, не через меню. У широкій шапці він уже є в
+   навігації, тож ця кнопка з'являється там, де навігація ховається. */
+.header__blog {
+  display: none;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--pill);
+  font-size: .87rem;
+  color: var(--plum);
+  white-space: nowrap;
+  transition: background-color .3s var(--ease), border-color .3s var(--ease);
+}
+.header__blog:hover { background: rgba(46, 35, 56, .06); border-color: var(--plum); }
 .header .btn { font-size: .87rem; padding-left: 22px; }
 .header .btn::after { width: 30px; height: 30px; background-size: 13px; }
 
@@ -491,6 +505,7 @@
 @media (max-width: 1080px) {
   .nav { display: none; }
   .burger { display: block; }
+  .header__blog { display: inline-flex; }
   .header__inner { grid-template-columns: auto 1fr auto; padding-left: 16px; }
   .logo { justify-self: start; }
   /* Бургер (він же хрестик) тримаємо над накладкою меню. Піднімати z-index
@@ -539,10 +554,25 @@
   .about__grid, .faq__grid { grid-template-columns: 1fr; }
   .about__card { max-width: 420px; }
   .hero { min-height: 90vh; min-height: 90svh; }
-  /* Знизу пелену майже прибираємо: текст стоїть угорі, а фото там тільки
-     сіріло. Плюс трохи контрасту — на телефоні знімок читався геть тьмяно. */
-  .hero::before { background: linear-gradient(174deg, var(--cream) 0%, rgba(249,240,231,.93) 34%, rgba(249,240,231,.5) 64%, rgba(249,240,231,.12) 100%); }
+  /* Пелена тримається там, де стоїть текст, і швидко сходить нижче нього:
+     інакше або знімок сірий, або нижні рядки лягають просто на крісло й
+     зливаються з ним. Текст на телефоні закінчується десь на 72% висоти. */
+  .hero::before { background: linear-gradient(176deg, var(--cream) 0%, rgba(249,240,231,.95) 42%, rgba(249,240,231,.86) 66%, rgba(249,240,231,.3) 84%, rgba(249,240,231,.06) 100%); }
   .hero__media img { filter: contrast(1.08) saturate(1.06); }
+
+  /* Опис лежить найближче до знімка: --muted давав 4,8:1 — норму,
+     але без запасу. Трохи темніший відтінок дає 6:1. */
+  .hero .lead { color: #574f63; }
+
+  /* Друга кнопка припадає просто на крісло. Замість підпірок навколо
+     стрілки даємо їй власну світлу плашку: тоді вона пара до головної —
+     та сама форма, лише світла — і читається на будь-якому тлі сама,
+     без кілець. */
+  .hero .btn--ghost {
+    background: rgba(253, 248, 242, .88);
+    padding-left: 28px;
+  }
+  .hero .btn--ghost:hover { background: var(--white); }
 }
 
 @media (max-width: 600px) {
@@ -589,17 +619,3 @@
   transition: border-color .3s var(--ease);
 }
 .posts__all a:hover { border-color: var(--plum); }
-
-/* рядок під кнопками героя: вхід у блог з першого екрана */
-.hero__blog {
-  margin: 22px 0 0;
-  font-size: .92rem;
-  color: var(--muted);
-}
-.hero__blog a {
-  color: var(--plum);
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 2px;
-  transition: border-color .3s var(--ease);
-}
-.hero__blog a:hover { border-color: var(--plum); }
