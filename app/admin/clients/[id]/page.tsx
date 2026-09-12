@@ -9,6 +9,9 @@ import { getTest, interpret } from '@/lib/tests';
 import { getClient } from '@/lib/clients';
 import { formatDate, formatDateTime, initials } from '@/lib/format';
 
+import { deleteHomework } from '../actions';
+
+import { HomeworkForm } from './homework-form';
 import { ResetPassword } from './reset-password';
 import { SummaryButton } from './summary-button';
 
@@ -115,6 +118,11 @@ export default async function ClientPage({ params }: PageProps<'/admin/clients/[
 
           {/* ---------- домашні завдання ---------- */}
           <Card className="p-7">
+            <h2 className="mb-4 font-display text-2xl text-plum">Призначити завдання</h2>
+            <HomeworkForm userId={client.id} />
+          </Card>
+
+          <Card className="p-7">
             <h2 className="mb-4 font-display text-2xl text-plum">Домашні завдання</h2>
             {client.homework.length === 0 ? (
               <EmptyState>Завдань ще не призначено.</EmptyState>
@@ -127,9 +135,20 @@ export default async function ClientPage({ params }: PageProps<'/admin/clients/[
                         <p className="font-medium text-plum">{task.title}</p>
                         <p className="mt-1 text-sm text-muted">{task.description}</p>
                       </div>
-                      <Badge tone={task.status === 'COMPLETED' ? 'mint' : 'warm'}>
-                        {homeworkLabels[task.status]}
-                      </Badge>
+                      <span className="flex shrink-0 items-center gap-3">
+                        <Badge tone={task.status === 'COMPLETED' ? 'mint' : 'warm'}>
+                          {homeworkLabels[task.status]}
+                        </Badge>
+                        <form action={deleteHomework}>
+                          <input type="hidden" name="id" value={task.id} />
+                          <button
+                            type="submit"
+                            className="text-xs text-muted underline underline-offset-4 hover:text-plum"
+                          >
+                            Прибрати
+                          </button>
+                        </form>
+                      </span>
                     </div>
                     {task.clientAnswer ? (
                       <p className="mt-3 rounded-2xl bg-cream-warm p-4 text-sm whitespace-pre-line text-plum">

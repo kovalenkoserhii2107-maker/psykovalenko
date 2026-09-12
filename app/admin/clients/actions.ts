@@ -169,3 +169,67 @@ export async function resetClientPassword(
   revalidatePath(`/admin/clients/${client.id}`);
   return { password };
 }
+
+// ------------------------------------------------------- домашні завдання
+
+const homeworkSchema = z.object({
+  userId: z.string().min(1),
+  title: z.string().trim().min(3, 'Назва закоротка'),
+  description: z.string().trim().min(10, 'Опишіть завдання докладніше'),
+  dueDate: z.string().trim().optional(),
+});
+
+export type HomeworkState = { error?: string; ok?: string };
+
+export async function assignHomework(
+  _prev: HomeworkState,
+  formData: FormData,
+): Promise<HomeworkState> {
+  await requireRole('ADMIN');
+
+  const parsed = homeworkSchema.safeParse({
+    userId: String(formData.get('userId') ?? ''),
+    title: String(formData.get('title') ?? ''),
+    description: String(formData.get('description') ?? ''),
+    dueDate: String(formData.get('dueDate') ?? ''),
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? 'Перевірте поля' };
+  }
+
+  const { userId, title, description, dueDate } = parsed.data;
+
+  const client = await db.user.findFirst({
+    where: { id: userId, role: 'CLIENT' },
+    select: { id: true },
+  });
+  if (!client) return { error: 'Клієнта не знайдено' };
+
+  let due: Date | null = null;
+  if (dueDate) {
+    const parsedDate = new Date(dueDate);
+    if (Number.isNaN(parsedDate.getTime())) return { error: 'Невірна дата' };
+    due = parsedDate;
+  }
+
+  await db.homework.create({
+    data: { userId: client.id, title, description, dueDate: due },
+  });
+
+  revalidatePath(`/admin/clients/${client.id}`);
+  revalidatePath('/admin');
+  return { ok: 'Завдання призначено — клієнт побачить його в кабінеті' };
+}
+
+/** Прибирає завдання. Відповідь клієнта — вагома причина спитати ще раз. */
+export async function deleteHomework(formData: FormData) {
+  await requireRole('ADMIN');
+
+  const id = String(formData.get('id') ?? '');
+  const task = await db.homework.findUnique({ where: { id } });
+  if (!task) return;
+
+  await db.homework.delete({ where: { id } });
+  revalidatePath(`/admin/clients/${task.userId}`);
+  revalidatePath('/admin');
+}
