@@ -19,12 +19,7 @@ export async function listClients() {
         take: 1,
         select: { datetime: true },
       },
-      _count: {
-        select: {
-          homework: { where: { status: { not: 'COMPLETED' } } },
-          results: true,
-        },
-      },
+      _count: { select: { results: true } },
     },
   });
 

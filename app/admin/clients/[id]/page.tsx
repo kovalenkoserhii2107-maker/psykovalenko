@@ -7,6 +7,7 @@ import { TestProfile } from '@/components/test-profile';
 import { isAiConfigured } from '@/lib/ai';
 import { getTest, interpret } from '@/lib/tests';
 import { getClient } from '@/lib/clients';
+import { HOMEWORK_ENABLED } from '@/lib/features';
 import { formatDate, formatDateTime, initials } from '@/lib/format';
 
 import { deleteHomework } from '../actions';
@@ -116,6 +117,8 @@ export default async function ClientPage({ params }: PageProps<'/admin/clients/[
             )}
           </Card>
 
+          {HOMEWORK_ENABLED ? (
+            <>
           {/* ---------- домашні завдання ---------- */}
           <Card className="p-7">
             <h2 className="mb-4 font-display text-2xl text-plum">Призначити завдання</h2>
@@ -165,6 +168,8 @@ export default async function ClientPage({ params }: PageProps<'/admin/clients/[
               </ul>
             )}
           </Card>
+            </>
+          ) : null}
 
           {/* ---------- тести ---------- */}
           <Card className="p-7">

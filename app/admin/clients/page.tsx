@@ -31,7 +31,7 @@ export default async function ClientsPage() {
                 <th className="px-6 py-4 font-medium">Клієнт</th>
                 <th className="px-6 py-4 font-medium">Запит</th>
                 <th className="px-6 py-4 font-medium">Наступна зустріч</th>
-                <th className="px-6 py-4 font-medium">Завдання</th>
+                <th className="px-6 py-4 font-medium">Анкети</th>
                 <th className="px-6 py-4 font-medium">У базі з</th>
               </tr>
             </thead>
@@ -61,8 +61,8 @@ export default async function ClientsPage() {
                     {client.nextSession ? formatDateTime(client.nextSession) : '—'}
                   </td>
                   <td className="px-6 py-4">
-                    {client._count.homework > 0 ? (
-                      <Badge tone="warm">{client._count.homework} активних</Badge>
+                    {client._count.results > 0 ? (
+                      <Badge tone="mint">{client._count.results}</Badge>
                     ) : (
                       <span className="text-muted">—</span>
                     )}

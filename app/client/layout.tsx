@@ -2,10 +2,11 @@ import Link from 'next/link';
 
 import { LogoutButton } from '@/components/logout-button';
 import { requireRole } from '@/lib/auth-guard';
+import { HOMEWORK_ENABLED } from '@/lib/features';
 
 const tabs = [
   { href: '/client', label: 'Головна' },
-  { href: '/client/homework', label: 'Завдання' },
+  ...(HOMEWORK_ENABLED ? [{ href: '/client/homework', label: 'Завдання' }] : []),
   { href: '/client/tests', label: 'Тести' },
 ];
 

@@ -5,6 +5,8 @@ import { Badge, Card, EmptyState } from '@/components/ui';
 import { requireRole } from '@/lib/auth-guard';
 import { db } from '@/lib/db';
 import { formatDate } from '@/lib/format';
+import { notFound } from 'next/navigation';
+import { HOMEWORK_ENABLED } from '@/lib/features';
 
 export const metadata: Metadata = { title: 'Завдання' };
 
@@ -15,6 +17,9 @@ const statusLabels = {
 } as const;
 
 export default async function HomeworkList() {
+  // Механіка прихована, але код і дані лишились — див. lib/features.ts
+  if (!HOMEWORK_ENABLED) notFound();
+
   const user = await requireRole('CLIENT');
 
   const tasks = await db.homework.findMany({
