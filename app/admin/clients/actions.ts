@@ -137,3 +137,35 @@ export async function buildSummary(
     return { error: `Не вдалося скласти резюме: ${message}` };
   }
 }
+
+// ---------------------------------------------------- новий пароль клієнту
+
+export type ResetPasswordState = { error?: string; password?: string };
+
+/**
+ * Видає клієнту новий пароль. Старий перестає діяти одразу: у базі
+ * зберігається лише хеш, тож «підглянути» втрачений пароль неможливо —
+ * єдиний шлях видати новий.
+ */
+export async function resetClientPassword(
+  _prev: ResetPasswordState,
+  formData: FormData,
+): Promise<ResetPasswordState> {
+  await requireRole('ADMIN');
+
+  const userId = String(formData.get('userId') ?? '');
+  const client = await db.user.findFirst({
+    where: { id: userId, role: 'CLIENT' },
+    select: { id: true },
+  });
+  if (!client) return { error: 'Клієнта не знайдено' };
+
+  const password = generatePassword();
+  await db.user.update({
+    where: { id: client.id },
+    data: { passwordHash: await bcrypt.hash(password, 12) },
+  });
+
+  revalidatePath(`/admin/clients/${client.id}`);
+  return { password };
+}
