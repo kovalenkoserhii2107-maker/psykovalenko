@@ -19,12 +19,7 @@ export async function listClients() {
         take: 1,
         select: { datetime: true },
       },
-      _count: {
-        select: {
-          homework: { where: { status: { not: 'COMPLETED' } } },
-          results: true,
-        },
-      },
+      _count: { select: { results: true } },
     },
   });
 
@@ -42,6 +37,16 @@ export async function getClient(id: string) {
       sessions: { orderBy: { datetime: 'desc' } },
       homework: { orderBy: { createdAt: 'desc' }, include: { attachments: true } },
       results: { orderBy: { completedAt: 'desc' } },
+      // Закріплені нотатки — вгорі стрічки, решта за свіжістю
+      notes: {
+        orderBy: [{ pinned: 'desc' }, { createdAt: 'desc' }],
+        include: { session: { select: { datetime: true } } },
+      },
+      tasks: { orderBy: [{ done: 'asc' }, { createdAt: 'desc' }] },
+      invites: {
+        where: { status: { not: 'COMPLETED' } },
+        orderBy: { createdAt: 'desc' },
+      },
     },
   });
 }

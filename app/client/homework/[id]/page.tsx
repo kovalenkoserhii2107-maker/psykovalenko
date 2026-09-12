@@ -9,6 +9,7 @@ import { formatDate } from '@/lib/format';
 
 import { AnswerForm } from './answer-form';
 import { UploadForm } from './upload-form';
+import { HOMEWORK_ENABLED } from '@/lib/features';
 
 export const metadata: Metadata = { title: 'Завдання' };
 
@@ -23,6 +24,9 @@ const kb = (size: number) => `${Math.max(1, Math.round(size / 1024))} КБ`;
 export default async function HomeworkPage({
   params,
 }: PageProps<'/client/homework/[id]'>) {
+  // Механіка прихована, але код і дані лишились — див. lib/features.ts
+  if (!HOMEWORK_ENABLED) notFound();
+
   const user = await requireRole('CLIENT');
   const { id } = await params;
 

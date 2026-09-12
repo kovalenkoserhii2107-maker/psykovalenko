@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 
 import { Card, EmptyState, PageTitle } from '@/components/ui';
 import { db } from '@/lib/db';
+import { HOMEWORK_ENABLED } from '@/lib/features';
 import { formatDateTime, initials } from '@/lib/format';
 
 export const metadata: Metadata = { title: 'Огляд' };
@@ -19,13 +20,13 @@ export default async function AdminOverview() {
       include: { user: { select: { id: true, name: true, email: true } } },
       take: 8,
     }),
-    db.homework.count({ where: { status: { not: 'COMPLETED' } } }),
+    HOMEWORK_ENABLED ? db.homework.count({ where: { status: { not: 'COMPLETED' } } }) : 0,
   ]);
 
   const stats = [
     { label: 'Клієнтів у базі', value: clients },
     { label: 'Зустрічей на тиждень', value: upcoming.length },
-    { label: 'Завдань в роботі', value: openHomework },
+    ...(HOMEWORK_ENABLED ? [{ label: 'Завдань в роботі', value: openHomework }] : []),
   ];
 
   return (

@@ -3,27 +3,52 @@
 import Link from 'next/link';
 import { useActionState, useCallback, useEffect, useRef, useState } from 'react';
 
+import type { TestSubmitState } from '@/lib/test-scoring';
 import type { TestDefinition } from '@/lib/tests';
 
-import { saveTestResult, type SaveTestState } from '../actions';
+const initial: TestSubmitState = {};
 
-const initial: SaveTestState = {};
+const respondentField =
+  'w-full rounded-2xl border border-[rgba(46,35,56,.16)] bg-white/70 px-4 py-3 text-base text-ink outline-none focus:border-plum/40 focus:bg-white';
+
+/** Що робити з відповідями: кабінет клієнта і публічне посилання дають різні дії. */
+type SubmitAction = (
+  state: TestSubmitState,
+  formData: FormData,
+) => Promise<TestSubmitState>;
 
 /** Прибираємо розділові знаки й зводимо до нижнього регістру для звірки з варіантами. */
 const normalize = (s: string) =>
   s.toLowerCase().replace(/[^\p{L}\p{N}\s]/gu, '').replace(/\s+/g, ' ').trim();
 
-export function TestWizard({ test }: { test: TestDefinition }) {
+export function TestWizard({
+  test,
+  action,
+  hidden,
+  doneHref,
+  doneLabel,
+  askRespondent = false,
+}: {
+  test: TestDefinition;
+  action: SubmitAction;
+  /** Поля, що їдуть разом з відповідями: slug у кабінеті, token за посиланням */
+  hidden: Record<string, string>;
+  doneHref?: string;
+  doneLabel?: string;
+  /** Стороння людина називає себе сама — у кабінеті ім'я вже відоме */
+  askRespondent?: boolean;
+}) {
   const total = test.questions.length;
   const [step, setStep] = useState(0); // 0..total-1 — питання, total — відкрите питання
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [note, setNote] = useState('');
+  const [respondent, setRespondent] = useState({ name: '', email: '' });
   const [listening, setListening] = useState(false);
   const [voiceHint, setVoiceHint] = useState<string | null>(null);
   const [speechReady, setSpeechReady] = useState({ speak: false, listen: false });
 
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
-  const [state, formAction, pending] = useActionState(saveTestResult, initial);
+  const [state, formAction, pending] = useActionState(action, initial);
 
   useEffect(() => {
     setSpeechReady({
@@ -111,11 +136,7 @@ export function TestWizard({ test }: { test: TestDefinition }) {
   // --- результат ---
   // Клієнту показуємо коротко, без балів і тлумачень: розбір — робота
   // психологині на зустрічі, а цифра без контексту лише лякає.
-  if (state.profile || state.score !== undefined) {
-    const top = state.profile
-      ? [...state.profile].sort((a, b) => b.value - a.value)[0]
-      : null;
-
+  if (state.done) {
     return (
       <div className="flex flex-col gap-5">
         <div className="rounded-3xl border border-white/70 bg-white/60 p-7 text-center backdrop-blur-xl">
@@ -123,9 +144,9 @@ export function TestWizard({ test }: { test: TestDefinition }) {
           <p className="mt-3 text-sm text-muted">
             Відповіді збережено — психологиня подивиться їх перед зустріччю.
           </p>
-          {top ? (
+          {state.headline ? (
             <p className="mt-4 text-sm text-plum">
-              Найпомітніший стан у ваших відповідях — <b>{top.name}</b>.
+              Найпомітніший стан у ваших відповідях — <b>{state.headline}</b>.
             </p>
           ) : null}
           <p className="mt-4 text-xs text-muted">
@@ -133,12 +154,14 @@ export function TestWizard({ test }: { test: TestDefinition }) {
           </p>
         </div>
 
-        <Link
-          href="/client/tests"
-          className="rounded-full bg-plum py-3.5 text-center text-base font-medium text-white"
-        >
-          До списку тестів
-        </Link>
+        {doneHref ? (
+          <Link
+            href={doneHref}
+            className="rounded-full bg-plum py-3.5 text-center text-base font-medium text-white"
+          >
+            {doneLabel ?? 'Далі'}
+          </Link>
+        ) : null}
       </div>
     );
   }
@@ -201,13 +224,32 @@ export function TestWizard({ test }: { test: TestDefinition }) {
 
         {/* --- варіанти або текст --- */}
         {isOpenStep ? (
-          <textarea
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            rows={5}
-            placeholder="Можна написати або надиктувати. Можна пропустити."
-            className="mt-5 w-full resize-y rounded-2xl border border-[rgba(46,35,56,.16)] bg-white/70 px-4 py-3 text-base text-ink outline-none focus:border-plum/40 focus:bg-white"
-          />
+          <>
+            <textarea
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              rows={5}
+              placeholder="Можна написати або надиктувати. Можна пропустити."
+              className="mt-5 w-full resize-y rounded-2xl border border-[rgba(46,35,56,.16)] bg-white/70 px-4 py-3 text-base text-ink outline-none focus:border-plum/40 focus:bg-white"
+            />
+            {askRespondent ? (
+              <div className="mt-4 flex flex-col gap-2">
+                <input
+                  value={respondent.name}
+                  onChange={(e) => setRespondent({ ...respondent, name: e.target.value })}
+                  placeholder="Як до вас звертатись — не обов’язково"
+                  className={respondentField}
+                />
+                <input
+                  type="email"
+                  value={respondent.email}
+                  onChange={(e) => setRespondent({ ...respondent, email: e.target.value })}
+                  placeholder="Пошта, якщо хочете відповідь — не обов’язково"
+                  className={respondentField}
+                />
+              </div>
+            ) : null}
+          </>
         ) : (
           <ul className="mt-5 flex flex-col gap-2">
             {test.options.map((option) => {
@@ -245,9 +287,17 @@ export function TestWizard({ test }: { test: TestDefinition }) {
 
         {isOpenStep ? (
           <form action={formAction}>
-            <input type="hidden" name="slug" value={test.slug} />
+            {Object.entries(hidden).map(([name, value]) => (
+              <input key={name} type="hidden" name={name} value={value} />
+            ))}
             <input type="hidden" name="answers" value={JSON.stringify(answers)} />
             <input type="hidden" name="note" value={note} />
+            {askRespondent ? (
+              <>
+                <input type="hidden" name="respondentName" value={respondent.name} />
+                <input type="hidden" name="respondentEmail" value={respondent.email} />
+              </>
+            ) : null}
             <button
               type="submit"
               disabled={pending}

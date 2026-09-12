@@ -1,4 +1,4 @@
-import type { ProfileEntry } from '@/app/client/tests/actions';
+import type { ProfileEntry } from '@/lib/test-scoring';
 import { getTest } from '@/lib/tests';
 
 /**
