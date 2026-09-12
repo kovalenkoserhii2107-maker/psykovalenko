@@ -16,6 +16,15 @@ cd psykovalenko
 І не додавайте до команд коментарі через `#`: zsh у macOS за замовчуванням
 не вважає це коментарем і передає решту рядка як аргумент.
 
+**Якщо `git pull` каже «Your local changes to fly.toml would be
+overwritten»** — це `fly launch` переписав файл під себе. Оновлення тоді
+не приходить, і `fly deploy` збирає стару версію коду. Лікується так:
+
+```
+git checkout -- fly.toml
+git pull
+```
+
 ## 1. Створити застосунок
 
 ```
