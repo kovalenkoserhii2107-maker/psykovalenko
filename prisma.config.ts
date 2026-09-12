@@ -15,6 +15,10 @@ export default {
     path: path.join('prisma', 'migrations'),
   },
   datasource: {
-    url: process.env.DATABASE_URL ?? '',
+    // Міграції ходять повз пулер: Prisma бере advisory-блокування, а через
+    // pgbouncer у transaction-режимі воно не працює — деплой падає з P1002.
+    // У продакшені DIRECT_DATABASE_URL вказує на direct.<кластер>.flympg.net,
+    // локально його немає й береться звичайна адреса.
+    url: process.env.DIRECT_DATABASE_URL ?? process.env.DATABASE_URL ?? '',
   },
 };

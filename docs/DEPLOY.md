@@ -47,8 +47,17 @@ fly mpg create
 fly mpg attach --app psykovalenko
 ```
 
-`attach` сам пропише секрет `DATABASE_URL`. Міграції накочуються
-автоматично перед кожним деплоєм — це `release_command` у `fly.toml`.
+`attach` сам пропише секрет `DATABASE_URL` — він веде через пулер
+pgbouncer. Міграціям потрібне пряме підключення, інакше деплой падає
+з `P1002` на advisory-блокуванні. Адресу видно у виводі `fly mpg proxy`
+(`direct.<кластер>.flympg.net`), пароль той самий:
+
+```
+fly secrets set DIRECT_DATABASE_URL="postgresql://fly-user:<пароль>@direct.<кластер>.flympg.net:5432/fly-db"
+```
+
+Міграції накочуються автоматично перед кожним деплоєм — це
+`release_command` у `fly.toml`.
 
 ## 3. Диск під вкладення
 
