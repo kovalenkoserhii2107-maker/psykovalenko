@@ -293,6 +293,11 @@ model Post {
   // через dangerouslySetInnerHTML, а збираємо React-вузли.
   body String
 
+  /// Рубрика. Вільний рядок, а не перелік: набір тем у блозі складається
+  /// з часом, і додавати міграцію заради нової рубрики не хочеться.
+  /// Підказки для вибору — lib/post-categories.ts.
+  category String?
+
   status      PostStatus @default(DRAFT)
   publishedAt DateTime?
 
@@ -314,6 +319,7 @@ model Post {
   updatedAt DateTime @updatedAt
 
   @@index([status, publishedAt])
+  @@index([category])
 }
 
 // ---------------------------------------------------------------- NextAuth

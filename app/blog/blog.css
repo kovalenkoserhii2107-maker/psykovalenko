@@ -110,3 +110,31 @@
 @media (max-width: 600px) {
   .blog-article__cta { flex-direction: column; align-items: flex-start; }
 }
+
+/* ---------- рубрики ---------- */
+
+.blog-rubrics {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: clamp(26px, 3.4vw, 40px);
+}
+.blog-rubrics a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 8px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--pill);
+  font-size: .9rem;
+  color: var(--muted);
+  transition: border-color .3s var(--ease), color .3s var(--ease), background-color .3s var(--ease);
+}
+.blog-rubrics a:hover { border-color: var(--plum); color: var(--plum); }
+.blog-rubrics a.is-active {
+  background: var(--plum);
+  border-color: var(--plum);
+  color: var(--cream);
+}
+.blog-rubrics b { font-weight: 400; font-size: .78rem; opacity: .6; }
