@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 
+import { asset } from '@/lib/base-path';
+
 import './landing.css';
 import { LandingInteractions } from './landing-interactions';
 
@@ -7,6 +9,9 @@ export const metadata: Metadata = {
   title: 'Тетяна Коваленко — психологиня. Онлайн та очно',
   description:
     'Місце, де можна бути собою. Тривога, вигорання, стосунки, самооцінка. Консультації онлайн та очно.',
+  // Шляхи знімків тут без basePath: Next приклеює їх до metadataBase,
+  // а та вже містить префікс (NEXT_PUBLIC_SITE_URL). Інакше вийде
+  // /psykovalenko/psykovalenko/… — саме так і було на першій збірці.
   openGraph: {
     type: 'website',
     title: 'Тетяна Коваленко — психологиня',
@@ -60,7 +65,7 @@ export default function LandingPage() {
 
       {/* ============ ГЕРОЙ ============ */}
       <section className="hero" id="hero">
-        <div className="hero__media"><img src="/assets/img/hero.jpg" alt="" /></div>
+        <div className="hero__media"><img src={asset('/assets/img/hero.jpg')} alt="" /></div>
 
         <div className="hero__inner">
           <div className="hero__col reveal">
@@ -79,7 +84,7 @@ export default function LandingPage() {
       {/* ============ ХОРОША НОВИНА ============ */}
       <section className="section good">
         <div className="container container--narrow">
-          <div className="good__photo arch reveal"><img src="/assets/img/good.jpg" alt="" /></div>
+          <div className="good__photo arch reveal"><img src={asset('/assets/img/good.jpg')} alt="" /></div>
 
           <div className="reveal">
             <p className="good__kicker">А <em>хороша</em> новина?</p>
@@ -129,7 +134,7 @@ export default function LandingPage() {
 
           <div className="about__grid">
             <div className="about__card reveal">
-              <div className="about__photo"><img src="/assets/img/about.jpg" alt="Тетяна Коваленко" /></div>
+              <div className="about__photo"><img src={asset('/assets/img/about.jpg')} alt="Тетяна Коваленко" /></div>
               <p className="about__card-title"><em>Магістр психології</em> — Тетяна Коваленко</p>
               <p>Моя мета — не втримати вас у терапії назавжди, а допомогти віднайти опору й іти далі самостійно.</p>
             </div>
@@ -174,7 +179,7 @@ export default function LandingPage() {
 
       {/* ============ СТАТИСТИКА ============ */}
       <section className="section stats">
-        <div className="stats__media"><img src="/assets/img/stats.jpg" alt="" /></div>
+        <div className="stats__media"><img src={asset('/assets/img/stats.jpg')} alt="" /></div>
         <div className="container">
           <h2 className="reveal">Щоб якісна терапія була доступною кожному</h2>
 
@@ -197,21 +202,21 @@ export default function LandingPage() {
 
           <div className="services__grid">
             <article className="svc reveal">
-              <div className="svc__media"><img src="/assets/img/card-1.jpg" alt="" /></div>
+              <div className="svc__media"><img src={asset('/assets/img/card-1.jpg')} alt="" /></div>
               <h3>Індивідуальна терапія</h3>
               <p>50 хвилин наодинці зі своїм запитом. Регулярність — зазвичай раз на тиждень.</p>
               <div className="svc__foot"><span className="arrow-btn" aria-hidden="true"></span></div>
             </article>
 
             <article className="svc reveal">
-              <div className="svc__media"><img src="/assets/img/card-2.jpg" alt="" /></div>
+              <div className="svc__media"><img src={asset('/assets/img/card-2.jpg')} alt="" /></div>
               <h3>Робота з парою</h3>
               <p>Про конфлікти, близькість і вміння чути одне одного. 80 хвилин разом.</p>
               <div className="svc__foot"><span className="arrow-btn" aria-hidden="true"></span></div>
             </article>
 
             <article className="svc reveal">
-              <div className="svc__media"><img src="/assets/img/card-3.jpg" alt="" /></div>
+              <div className="svc__media"><img src={asset('/assets/img/card-3.jpg')} alt="" /></div>
               <h3>Підтримувальні консультації</h3>
               <p>Коли гострої кризи немає, але хочеться стійкості та ясності. Раз на 2–4 тижні.</p>
               <div className="svc__foot"><span className="arrow-btn" aria-hidden="true"></span></div>
