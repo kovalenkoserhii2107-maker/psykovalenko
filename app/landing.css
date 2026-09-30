@@ -108,8 +108,8 @@
 .header.is-hidden { transform: translateY(-140%); }
 
 .header__inner {
-  /* Ширша за решту сторінки: навігації з шістьма пунктами при центрованому
-     логотипі не вистачало саме цих кількох десятків пікселів. */
+  /* Ширша за решту сторінки: навігації при центрованому логотипі не
+     вистачало саме цих кількох десятків пікселів. */
   max-width: min(1440px, 100%);
   margin-inline: auto;
   background: rgba(253, 248, 242, .92);
@@ -141,9 +141,6 @@
 
 .nav { display: flex; align-items: center; gap: 18px; }
 .nav__cta { display: none; }
-/* пункт «Кабінет» показуємо лише у відкритому мобільному меню:
-   у шапці на вузьких екранах для нього немає місця */
-.nav__cabinet { display: none; }
 
 .nav a {
   font-size: .875rem;
@@ -169,19 +166,6 @@
 
 .header__actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
 
-/* Блог має бути під рукою, не через меню. У широкій шапці він уже є в
-   навігації, тож ця кнопка з'являється там, де навігація ховається. */
-.header__blog {
-  display: none;
-  padding: 8px 16px;
-  border: 1px solid var(--line);
-  border-radius: var(--pill);
-  font-size: .87rem;
-  color: var(--plum);
-  white-space: nowrap;
-  transition: background-color .3s var(--ease), border-color .3s var(--ease);
-}
-.header__blog:hover { background: rgba(46, 35, 56, .06); border-color: var(--plum); }
 .header .btn { font-size: .87rem; padding-left: 22px; }
 .header .btn::after { width: 30px; height: 30px; background-size: 13px; }
 
@@ -379,17 +363,6 @@
 .faq h2 { max-width: 10ch; }
 .faq .btn { margin-top: clamp(28px, 5vw, 62px); }
 
-/* ---------- блог ---------- */
-
-.posts__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-.post { display: flex; flex-direction: column; text-align: center; }
-.post__media { aspect-ratio: 3 / 4; border-radius: var(--radius); overflow: hidden; background: var(--cream-warm); margin-bottom: 22px; }
-.post__media img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease); }
-.post:hover .post__media img { transform: scale(1.04); }
-.post__date { font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
-.post h3 { font-size: clamp(1.15rem, 1.7vw, 1.4rem); margin: 0 auto; max-width: 22ch; transition: opacity .35s var(--ease); }
-.post:hover h3 { opacity: .65; }
-
 /* ---------- фінальний блок: запис + підвал ---------- */
 
 .closing {
@@ -508,9 +481,26 @@
 /* ---------- адаптив ---------- */
 
 @media (max-width: 1320px) {
+  /* Блюр під фіксованою шапкою браузер перераховує на кожному кадрі скролу —
+     на телефоні це найдорожча операція на сторінці. Тло і так майже
+     непрозоре, тож блюр прибираємо, а непрозорість трохи піднімаємо. */
+  .header__inner { backdrop-filter: none; background: rgba(253, 248, 242, .97); }
+  .stat { backdrop-filter: none; background: rgba(255, 255, 255, .14); }
+
+  .stats__grid { grid-template-columns: repeat(2, 1fr); }
+  .services__grid { grid-template-columns: repeat(2, 1fr); }
+  .experience__grid { grid-template-columns: repeat(2, 1fr); }
+  .social__head { grid-template-columns: 1fr; }
+  .footer__grid { grid-template-columns: 1fr 1fr; }
+  .focus__list { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Шапка: навігація з п'яти пунктів природно займає 435px і тримається в
+   один рядок до 940px — нижче шапка вже не вміщається. Беремо 1000px:
+   і запас є, і на ноутбуках лишається справжня навігація, а не бургер. */
+@media (max-width: 1000px) {
   .nav { display: none; }
   .burger { display: block; }
-  .header__blog { display: inline-flex; }
   .header__inner { grid-template-columns: auto 1fr auto; padding-left: 16px; }
   .logo { justify-self: start; }
   /* Бургер (він же хрестик) тримаємо над накладкою меню. Піднімати z-index
@@ -538,21 +528,6 @@
     background: transparent;
     box-shadow: none;
   }
-
-  /* Блюр під фіксованою шапкою браузер перераховує на кожному кадрі скролу —
-     на телефоні це найдорожча операція на сторінці. Тло і так майже
-     непрозоре, тож блюр прибираємо, а непрозорість трохи піднімаємо. */
-  .header__inner { backdrop-filter: none; background: rgba(253, 248, 242, .97); }
-  .stat { backdrop-filter: none; background: rgba(255, 255, 255, .14); }
-  .nav.is-open .nav__cabinet { display: block; }
-  .header__label { display: none; }
-
-  .stats__grid { grid-template-columns: repeat(2, 1fr); }
-  .services__grid, .posts__grid { grid-template-columns: repeat(2, 1fr); }
-  .experience__grid { grid-template-columns: repeat(2, 1fr); }
-  .social__head { grid-template-columns: 1fr; }
-  .footer__grid { grid-template-columns: 1fr 1fr; }
-  .focus__list { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 780px) {
@@ -587,11 +562,10 @@
   .header__inner { grid-template-columns: 1fr auto; padding: 8px 8px 8px 18px; }
   .header .btn { display: none; }
   .logo { font-size: 1.15rem; }
-  .services__grid, .posts__grid, .focus__list, .experience__grid { grid-template-columns: 1fr; }
+  .services__grid, .focus__list, .experience__grid { grid-template-columns: 1fr; }
   .stats__grid { grid-template-columns: 1fr; }
   .stat { min-height: 0; }
   .footer__grid { grid-template-columns: 1fr; }
-  .post__media { aspect-ratio: 4 / 3; }
 }
 
 
@@ -610,17 +584,3 @@
     scroll-behavior: auto !important;
   }
 }
-
-/* посилання на весь блог під сіткою дописів */
-.posts__all {
-  margin: clamp(26px, 3.4vw, 40px) 0 0;
-  text-align: center;
-}
-.posts__all a {
-  font-size: .95rem;
-  color: var(--plum);
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 3px;
-  transition: border-color .3s var(--ease);
-}
-.posts__all a:hover { border-color: var(--plum); }

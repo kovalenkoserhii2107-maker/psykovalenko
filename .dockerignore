@@ -3,8 +3,6 @@ node_modules
 .git
 .env
 .env.*
-uploads
-lib/generated
 
 # стара статична копія лендинга — живе на GitHub Pages, в образі не потрібна
 index.html
