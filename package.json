@@ -6,41 +6,21 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "postinstall": "prisma generate",
-    "db:push": "prisma db push",
-    "db:migrate": "prisma migrate dev",
-    "db:studio": "prisma studio",
-    "db:seed": "tsx prisma/seed.ts",
-    "test:mask": "tsx tests/mask.test.ts",
-    "test:blog": "tsx tests/blog.test.tsx"
+    "lint": "eslint"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.125.0",
-    "@auth/prisma-adapter": "^2.11.3",
-    "@prisma/adapter-pg": "^7.10.0",
-    "@prisma/client": "^7.10.0",
-    "bcryptjs": "^3.0.3",
-    "googleapis": "^180.0.0",
     "next": "16.3.5",
-    "next-auth": "^5.0.0-beta.32",
-    "pg": "^8.23.0",
     "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "zod": "^4.6.2"
+    "react-dom": "19.2.8"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
-    "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.5",
-    "prisma": "^7.10.0",
     "tailwindcss": "^4",
-    "tsx": "^4.23.13",
     "typescript": "^5"
   }
 }

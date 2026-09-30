@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   Спільна основа лендинга й кабінету: одна палітра, одна типографіка.
+   Основа сайту: палітра, типографіка, ритм.
    Компонентні стилі лендинга — в app/landing.css.
    ========================================================================== */
 
@@ -41,27 +41,8 @@
   --ease: cubic-bezier(.22, .61, .36, 1);
 }
 
-/* ті самі токени — для утиліт Tailwind у кабінеті: bg-cream, text-plum тощо */
-@theme inline {
-  --color-cream: var(--cream);
-  --color-cream-soft: var(--cream-soft);
-  --color-cream-warm: var(--cream-warm);
-  --color-plum: var(--plum);
-  --color-plum-soft: var(--plum-soft);
-  --color-mint: var(--mint);
-  --color-mint-deep: var(--mint-deep);
-  --color-ink: var(--ink);
-  --color-muted: var(--muted);
-
-  --font-sans: var(--sans);
-  --font-display: var(--display);
-
-  --radius-2xl: 22px;
-  --radius-3xl: 30px;
-}
-
-/* Базова типографіка — у шарі base, інакше селектори за тегом
-   перебивають утиліти Tailwind у кабінеті: h2 переважував text-2xl. */
+/* Базова типографіка — у шарі base, щоб селектори за тегом не перебивали
+   утиліти Tailwind. */
 @layer base {
   *, *::before, *::after { box-sizing: border-box; }
   html { scroll-behavior: smooth; }

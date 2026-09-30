@@ -1,9 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-
-import { listPublished } from '@/lib/blog-queries';
-import { formatDate } from '@/lib/format';
-import { coverUrl, postHref } from '@/lib/posts';
 
 import './landing.css';
 import { LandingInteractions } from './landing-interactions';
@@ -35,19 +30,7 @@ export const metadata: Metadata = {
   },
 };
 
-/**
- * Сторінка читає дописи з бази, тож рендериться на запит.
- *
- * Не ISR: із `revalidate` Next пререндерить сторінку ще на збірці, а в
- * образі DATABASE_URL немає — і `fly deploy` падав на «Export encountered
- * an error on /page: /». Перевіряти цей випадок треба збіркою без файла
- * .env, бо `next build` підхоплює його сам, і змінна з оболонки тут ні до чого.
- */
-export const dynamic = 'force-dynamic';
-
-export default async function LandingPage() {
-  const posts = await listPublished(3);
-
+export default function LandingPage() {
   return (
     <div className="landing">
       {/* ============ ШАПКА ============ */}
@@ -56,19 +39,15 @@ export default async function LandingPage() {
           <nav className="nav" id="nav">
             <a href="#about">Про мене</a>
             <a href="#services">Послуги</a>
-            <Link href="/blog">Блог</Link>
             <a href="#experience">Досвід клієнтів</a>
             <a href="#social">Соцмережі</a>
             <a href="#faq">Питання</a>
             <a href="#contact" className="nav__cta">Записатись</a>
-            <Link href="/login" className="nav__cabinet">Особистий кабінет</Link>
           </nav>
 
           <a href="#hero" className="logo"><span className="logo__mark"></span>Тетяна Коваленко</a>
 
           <div className="header__actions">
-            <Link href="/blog" className="header__blog">Блог</Link>
-            <a href="/login" className="btn btn--ghost header__label">Кабінет</a>
             <a href="#contact" className="btn">Записатись</a>
             <button className="burger" id="burger" aria-label="Меню" aria-expanded="false">
               <span></span><span></span><span></span>
@@ -241,50 +220,6 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* ============ ДОПИСИ ============
-           Блог — друга половина сайту, тож стоїть відразу після знайомства,
-           а не в кінці разом із соцмережами.
-           ================================= */}
-      {posts.length ? (
-        <section className="section" id="blog">
-          <div className="container">
-            <div className="section-head section-head--center reveal">
-              <h2>Дописи <em>та</em> нотатки</h2>
-              <p className="caption">Розбори, вправи й короткі нотатки про психіку</p>
-            </div>
-
-              <div className="posts__grid">
-                {posts.map((post) => {
-                  const cover = coverUrl(post);
-                  const href = postHref(post);
-                  const inner = (
-                    <>
-                      <div className="post__media">
-                        {cover ? <img src={cover} alt={post.coverAlt ?? ''} /> : null}
-                      </div>
-                      <p className="post__date">
-                        {post.category ? `${post.category} · ` : ''}
-                        {post.sourceLabel ?? formatDate(post.publishedAt!)}
-                      </p>
-                      <h3>{post.title}</h3>
-                    </>
-                  );
-
-                  return (
-                    <Link key={post.id} href={href} className="post reveal">
-                      {inner}
-                    </Link>
-                  );
-                })}
-              </div>
-
-              <p className="posts__all reveal">
-                <Link href="/blog">Усі дописи →</Link>
-              </p>
-          </div>
-        </section>
-      ) : null}
-
       {/* ============ ДОСВІД КЛІЄНТІВ ============
            Блок під наповнення: історії, кейси, шлях клієнта.
            Тексти нижче — рибка, замінюємо на реальні.
@@ -322,10 +257,7 @@ export default async function LandingPage() {
       </section>
 
 
-      {/* ============ СОЦМЕРЕЖІ ============
-           Дописи звідси переїхали вище власною секцією: блог — половина
-           сайту, а не додаток до переліку профілів.
-           ==================================== */}
+      {/* ============ СОЦМЕРЕЖІ ============ */}
       <section className="section social" id="social">
         <div className="container">
           <div className="social__head reveal">
@@ -413,7 +345,7 @@ export default async function LandingPage() {
 
             <div className="btn-row">
               <a href="https://t.me/Tetiana_psy_od" className="btn btn--light" target="_blank" rel="noopener">Написати в Telegram</a>
-              <a href="/login" className="btn btn--light">Особистий кабінет</a>
+              <a href="mailto:kovalenkotanya2205@gmail.com" className="btn btn--light">Написати на пошту</a>
             </div>
           </div>
 
@@ -429,7 +361,6 @@ export default async function LandingPage() {
                 <ul>
                   <li><a href="#about">Про мене</a></li>
                   <li><a href="#services">Напрямки</a></li>
-                  <li><Link href="/blog">Блог</Link></li>
                   <li><a href="#experience">Досвід клієнтів</a></li>
                   <li><a href="#faq">Питання</a></li>
                 </ul>
@@ -453,7 +384,6 @@ export default async function LandingPage() {
                 <ul>
                   <li><a href="mailto:kovalenkotanya2205@gmail.com">kovalenkotanya2205@gmail.com</a></li>
                   <li><a href="https://oduvs.edu.ua/persone/kovalenko_tetana_vasilivna" target="_blank" rel="noopener">Сторінка в ОДУВС</a></li>
-                  <li><Link href="/login">Особистий кабінет</Link></li>
                 </ul>
               </div>
             </div>

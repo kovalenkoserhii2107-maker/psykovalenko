@@ -1,17 +1,13 @@
 import type { MetadataRoute } from 'next';
 
-/**
- * Кабінет відкривають з телефона й додають на головний екран.
- * start_url веде в кабінет клієнта: неавторизованого middleware
- * сам перекине на вхід.
- */
+/** Сайт додають на головний екран телефона, тож відкривається з головної. */
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Тетяна Коваленко — психологиня',
     short_name: 'Коваленко',
     description:
-      'Особистий кабінет: записи на зустрічі, домашні завдання й тести.',
-    start_url: '/client',
+      'Психологиня Тетяна Коваленко: тривога, вигорання, стосунки, самооцінка. Онлайн та очно.',
+    start_url: '/',
     display: 'standalone',
     background_color: '#F9F0E7',
     theme_color: '#F9F0E7',

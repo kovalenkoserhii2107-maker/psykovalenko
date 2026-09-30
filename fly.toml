@@ -1,6 +1,6 @@
-# Конфігурація Fly.io. Перед першим запуском замініть app на своє ім'я.
+# Конфігурація Fly.io. Сайт — статичний лендинг, ні бази, ні диска не треба.
 app = "psykovalenko"
-primary_region = "ams"          # Амстердам — там створено застосунок і диск psy_data
+primary_region = "ams"          # Амстердам
 
 [build]
   dockerfile = "Dockerfile"
@@ -9,14 +9,8 @@ primary_region = "ams"          # Амстердам — там створено
     # адреса підставляється в збірку; після появи домену замініть і задеплойте знову
     NEXT_PUBLIC_SITE_URL = "https://psykovalenko.fly.dev"
 
-[deploy]
-  # накочується перед запуском нової версії
-  release_command = "node /migrator/node_modules/prisma/build/index.js migrate deploy"
-
 [env]
   PORT = "3000"
-  # тека вкладень на постійному диску, інакше файли зникнуть при перезапуску
-  UPLOAD_DIR = "/data/uploads"
 
 [http_service]
   internal_port = 3000
@@ -24,10 +18,6 @@ primary_region = "ams"          # Амстердам — там створено
   auto_stop_machines = "suspend"
   auto_start_machines = true
   min_machines_running = 0
-
-[[mounts]]
-  source = "psy_data"
-  destination = "/data"
 
 [[vm]]
   size = "shared-cpu-1x"
