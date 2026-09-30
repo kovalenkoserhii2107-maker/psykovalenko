@@ -22,6 +22,7 @@ npm run dev          # http://localhost:3000
 | `public/assets/img/` | знімки сторінки |
 | `index.html`, `assets/` | стара статична копія для GitHub Pages, у збірку не потрапляє |
 | `docs/DEPLOY.md` | як випускати |
+| `docs/BAZA-ZNESENA.md` | як знести базу на Fly і не платити за неї |
 | `docs/MIDJOURNEY.md` | як готувати знімки |
 
 ## Історія

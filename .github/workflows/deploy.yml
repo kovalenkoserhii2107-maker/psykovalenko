@@ -1,0 +1,53 @@
+# Випуск сайту на Fly.io при кожному push у main.
+#
+# Потрібен один секрет репозиторію — FLY_API_TOKEN
+# (Settings → Secrets and variables → Actions → New repository secret).
+# Створюється командою: fly tokens create deploy -a psykovalenko
+
+name: Деплой на Fly.io
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:      # кнопка «Run workflow» у вкладці Actions
+
+# Два випуски одночасно не їдуть: другий чекає, поки завершиться перший
+concurrency:
+  group: fly-deploy
+  cancel-in-progress: false
+
+jobs:
+  # Спершу перевірка. Раннер запускає збірку без файла .env — саме в цих
+  # умовах колись падав fly deploy, а локально все проходило, бо next build
+  # підхоплює .env сам. Тож поламана збірка сюди більше не доїде.
+  check:
+    name: Збірка і лінт
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+
+  deploy:
+    name: Випуск
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+
+      # --local-only: образ збирається просто тут, на раннері GitHub, і
+      # вивантажується в registry.fly.io. Без цього прапорця Fly підняв би
+      # власну машину-складальник, а вона теж рахується в рахунок — сенсу
+      # платити за неї немає, коли раннер і так безкоштовний.
+      - run: flyctl deploy --local-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
