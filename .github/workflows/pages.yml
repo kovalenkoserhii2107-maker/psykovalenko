@@ -1,0 +1,62 @@
+# Випуск сайту на GitHub Pages при кожному push у main.
+#
+# Разово в налаштуваннях репозиторію: Settings → Pages → Build and
+# deployment → Source → **GitHub Actions**. Доки там стоїть «Deploy from
+# a branch», Pages віддаватиме стару копію, а не цю збірку.
+
+name: Деплой на GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:      # кнопка «Run workflow» у вкладці Actions
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Два випуски одночасно не їдуть, але й не скасовують один одного
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Збірка
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run lint
+
+      # Обидві змінні потрапляють у збірку, а не в рантайм: NEXT_PUBLIC_*
+      # підставляються на етапі білда. BASE_PATH — префікс із іменем
+      # репозиторію в шляхах, SITE_URL — для абсолютного og:image.
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_BASE_PATH: /psykovalenko
+          NEXT_PUBLIC_SITE_URL: https://kovalenkoserhii2107-maker.github.io/psykovalenko
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    name: Випуск
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
