@@ -7,9 +7,9 @@ import './landing.css';
 import { LandingInteractions } from './landing-interactions';
 
 export const metadata: Metadata = {
-  title: 'Тетяна Коваленко, психолог. Онлайн та очно',
+  title: 'Тетяна Коваленко, психолог. Онлайн-консультації',
   description:
-    'Місце, де можна бути собою. Тривога, вигорання, стосунки, самооцінка. Консультації онлайн та очно.',
+    'Місце, де можна бути собою. Тривога, вигорання, стосунки, самооцінка. Консультації онлайн.',
   // Шляхи знімків тут без basePath: Next приклеює їх до metadataBase,
   // а та вже містить префікс (NEXT_PUBLIC_SITE_URL). Інакше вийде
   // /psykovalenko/psykovalenko/… — саме так і було на першій збірці.
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     type: 'website',
     title: 'Тетяна Коваленко, психолог',
     description:
-      'Місце, де можна бути собою. Тривога, вигорання, стосунки, самооцінка. Консультації онлайн та очно.',
+      'Місце, де можна бути собою. Тривога, вигорання, стосунки, самооцінка. Консультації онлайн.',
     images: [
       {
         url: '/assets/img/og.jpg',
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Тетяна Коваленко, психолог',
     description:
-      'Місце, де можна бути собою. Тривога, вигорання, стосунки, самооцінка. Консультації онлайн та очно.',
+      'Місце, де можна бути собою. Тривога, вигорання, стосунки, самооцінка. Консультації онлайн.',
     images: ['/assets/img/og.jpg'],
   },
 };
@@ -70,7 +70,7 @@ export default function LandingPage() {
 
         <div className="hero__inner">
           <div className="hero__col reveal">
-            <p className="rule-label rule-label--left"><b>Онлайн</b> та очні сесії</p>
+            <p className="rule-label rule-label--left"><b>Онлайн</b>-консультації</p>
             <h1>Місце, де можна <em>бути собою.</em></h1>
             <p className="lead">Психолог Тетяна Коваленко. Тривога, вигорання, стосунки та самооцінка — у темпі, який підходить саме вам.</p>
 
@@ -143,7 +143,7 @@ export default function LandingPage() {
                 підібрані під ваш запит, а не універсальна схема «для всіх».
               </p>
               <p className="lead">
-                Очно чи онлайн, індивідуально чи в парі — ми починаємо з того місця, де ви зараз,
+                Онлайн, індивідуально чи в парі — ми починаємо з того місця, де ви зараз,
                 без оцінок і без поспіху.
               </p>
 
@@ -287,11 +287,11 @@ export default function LandingPage() {
             </div>
             <div className="accordion__item">
               <button className="accordion__btn">Скільки це коштує?</button>
-              <div className="accordion__panel"><p>Вартість уточнюйте у листі або в Telegram — вона залежить від формату та регулярності. Оплата після сесії.</p></div>
+              <div className="accordion__panel"><p>Індивідуальна сесія: 1500 грн. Парна чи сімейна: 2200 грн. Пакет із 5 індивідуальних сесій: 7000 грн. Оплата 100% наперед, не пізніше ніж за 24 години до сесії. Усі умови в <Link href="/offer/#r9">договорі оферти</Link>.</p></div>
             </div>
             <div className="accordion__item">
-              <button className="accordion__btn">Чи є онлайн-сесії?</button>
-              <div className="accordion__panel"><p>Так, працюю онлайн із будь-якої точки світу. Потрібні лише тихе місце і стабільний інтернет — результат не відрізняється від очного формату.</p></div>
+              <button className="accordion__btn">Як проходять сесії?</button>
+              <div className="accordion__panel"><p>Онлайн, через Zoom, Google Meet або Telegram, з будь-якої точки світу. Потрібні лише тихе місце, стабільний інтернет і пристрій із камерою та мікрофоном.</p></div>
             </div>
             <div className="accordion__item">
               <button className="accordion__btn">Що, якщо мені не підійде?</button>
