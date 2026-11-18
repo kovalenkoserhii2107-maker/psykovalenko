@@ -1,0 +1,30 @@
+/* Сторінка договору: той самий шрифт і палітра, що й лендинг, без шапки. */
+
+.offer { padding-block: clamp(48px, 8vw, 96px); }
+
+.offer__back {
+  display: inline-block;
+  margin-bottom: 36px;
+  font-size: .9rem;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 2px;
+  transition: color .3s var(--ease), border-color .3s var(--ease);
+}
+.offer__back:hover { color: var(--plum); border-color: var(--plum); }
+
+.offer h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); margin-bottom: 20px; }
+.offer__note { color: var(--muted); max-width: 60ch; margin-bottom: 48px; }
+.offer__note a { color: var(--plum); text-decoration: underline; text-underline-offset: 3px; }
+
+.offer__sections { list-style: none; counter-reset: offer; margin: 0; padding: 0; display: grid; gap: 14px; }
+.offer__sections li {
+  counter-increment: offer;
+  background: var(--cream-soft);
+  border: 1px dashed rgba(46, 35, 56, .2);
+  border-radius: var(--radius);
+  padding: 22px 26px;
+}
+.offer__sections h2 { font-size: 1.25rem; margin: 0 0 6px; }
+.offer__sections h2::before { content: counter(offer) ". "; color: var(--muted); }
+.offer__placeholder { margin: 0; font-size: .9rem; color: var(--muted); font-style: italic; }

@@ -15,10 +15,10 @@ export const dynamic = 'force-static';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Тетяна Коваленко — психологиня',
+    name: 'Тетяна Коваленко, психолог',
     short_name: 'Коваленко',
     description:
-      'Психологиня Тетяна Коваленко: тривога, вигорання, стосунки, самооцінка. Онлайн та очно.',
+      'Психолог Тетяна Коваленко: тривога, вигорання, стосунки, самооцінка. Онлайн та очно.',
     start_url: asset('/'),
     display: 'standalone',
     background_color: '#F9F0E7',

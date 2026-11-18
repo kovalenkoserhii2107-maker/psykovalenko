@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   // потрібно, щоб og:image віддавався абсолютним посиланням
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
   title: {
-    default: 'Тетяна Коваленко — психологиня',
+    default: 'Тетяна Коваленко, психолог',
     template: '%s · Тетяна Коваленко',
   },
   description:
