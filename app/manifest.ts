@@ -18,7 +18,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: 'Тетяна Коваленко, психолог',
     short_name: 'Коваленко',
     description:
-      'Психолог Тетяна Коваленко: тривога, вигорання, стосунки, самооцінка. Онлайн та очно.',
+      'Психолог Тетяна Коваленко: тривога, вигорання, стосунки, самооцінка. Консультації онлайн.',
     start_url: asset('/'),
     display: 'standalone',
     background_color: '#F9F0E7',
