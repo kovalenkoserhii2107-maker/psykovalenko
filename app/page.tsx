@@ -122,6 +122,10 @@ export default function LandingPage() {
             <li>Кризові стани</li>
             <li>Життєві сценарії</li>
           </ul>
+
+          <p className="focus__note reveal">
+            Не знайшли свого запиту? <a href="#contact">Напишіть мені</a>, і ми разом подивимось, з чого почати.
+          </p>
         </div>
       </section>
 
